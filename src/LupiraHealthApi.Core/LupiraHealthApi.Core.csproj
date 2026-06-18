@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Keep the LupiraHealthApi.* namespaces unchanged across the project split. -->
+    <RootNamespace>LupiraHealthApi</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Expose internal helpers (Geo, PartitionManager.Bounds) for unit testing. -->
+    <InternalsVisibleTo Include="LupiraHealthApi.Core.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The bounded context + data: Domain (event-sourced aggregates + events for the discrete clinical
+         facts), Application (services + OpResult + the raw-Npgsql telemetry ingest/query path), Dtos,
+         Mappers, Auth/AccessResolver+ConsentResolver. Marten is the event store + document store on the
+         `health` schema; the `telemetry` schema is raw partitioned tables written via Npgsql (which flows
+         in transitively from Marten). No ASP.NET dependency — that lives in the host. -->
+    <PackageReference Include="Marten" Version="9.6.0" />
+  </ItemGroup>
+
+</Project>
