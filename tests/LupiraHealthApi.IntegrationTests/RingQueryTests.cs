@@ -4,7 +4,7 @@ using LupiraHealthApi.Domain;
 using LupiraHealthApi.Dtos.Ring;
 using Xunit;
 
-namespace LupiraHealthApi.Server.Tests;
+namespace LupiraHealthApi.IntegrationTests;
 
 public sealed class RingQueryTests(HealthApiTestFactory factory) : IntegrationTest(factory)
 {

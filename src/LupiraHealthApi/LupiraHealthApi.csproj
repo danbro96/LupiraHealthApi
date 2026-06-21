@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <!-- Expose internal pure helpers (DeviceKey credential parsing, ingest parsing) for unit testing. -->
-    <InternalsVisibleTo Include="LupiraHealthApi.Server.Tests" />
+    <InternalsVisibleTo Include="LupiraHealthApi.IntegrationTests" />
   </ItemGroup>
 
   <ItemGroup>

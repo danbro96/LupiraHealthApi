@@ -1,7 +1,7 @@
 using System.Net;
 using Xunit;
 
-namespace LupiraHealthApi.Server.Tests;
+namespace LupiraHealthApi.IntegrationTests;
 
 /// <summary>The MCP transport is OIDC-gated (ApiPolicy) and LAN-only: a request bearing Cloudflare edge headers is
 /// 404'd by the backstop before auth runs, so an ingress mistake never exposes it through the tunnel.</summary>

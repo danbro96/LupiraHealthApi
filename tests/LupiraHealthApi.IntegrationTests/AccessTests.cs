@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 using LupiraHealthApi.Dtos.Records;
 using Xunit;
 
-namespace LupiraHealthApi.Server.Tests;
+namespace LupiraHealthApi.IntegrationTests;
 
 /// <summary>Cross-cutting authentication: unauthenticated requests are rejected, and each surface only accepts its own
 /// auth scheme (OIDC for the REST surface, device key for /ingest).</summary>

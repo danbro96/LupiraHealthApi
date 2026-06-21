@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace LupiraHealthApi.Server.Tests;
+namespace LupiraHealthApi.IntegrationTests;
 
 public sealed class RingIngestTests(HealthApiTestFactory factory) : IntegrationTest(factory)
 {

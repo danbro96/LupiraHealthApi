@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
-    <RootNamespace>LupiraHealthApi.Core.Tests</RootNamespace>
+    <RootNamespace>LupiraHealthApi.UnitTests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

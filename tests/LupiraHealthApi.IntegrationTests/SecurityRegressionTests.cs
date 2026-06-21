@@ -5,7 +5,7 @@ using LupiraHealthApi.Dtos.Devices;
 using LupiraHealthApi.Dtos.Ring;
 using Xunit;
 
-namespace LupiraHealthApi.Server.Tests;
+namespace LupiraHealthApi.IntegrationTests;
 
 /// <summary>Principal isolation: a user can only see their own telemetry, and can only register/list devices on a
 /// record they own. Ring queries hard-filter principal_id = caller; record-scoped device ops are ownership-checked.</summary>

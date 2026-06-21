@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 using LupiraHealthApi.Dtos.Records;
 using Xunit;
 
-namespace LupiraHealthApi.Server.Tests;
+namespace LupiraHealthApi.IntegrationTests;
 
 /// <summary>Generic REST surface: identity (/me) + health-record container CRUD.</summary>
 public sealed class RestEndpointsTests(HealthApiTestFactory factory) : IntegrationTest(factory)

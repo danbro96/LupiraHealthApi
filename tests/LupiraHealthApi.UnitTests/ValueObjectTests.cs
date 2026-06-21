@@ -3,7 +3,7 @@ using LupiraHealthApi.Domain;
 using LupiraHealthApi.Domain.Telemetry;
 using Xunit;
 
-namespace LupiraHealthApi.Core.Tests;
+namespace LupiraHealthApi.UnitTests;
 
 public class DeviceKeyHashingTests
 {

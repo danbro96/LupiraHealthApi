@@ -9,7 +9,7 @@ using LupiraHealthApi.Dtos.Records;
 using LupiraHealthApi.Dtos.Ring;
 using Xunit;
 
-namespace LupiraHealthApi.Server.Tests;
+namespace LupiraHealthApi.IntegrationTests;
 
 /// <summary>Base for integration tests: shares the container fixture, resets all state before each test, and provides
 /// REST + NDJSON-ingest helpers. Serial within the "integration" collection.</summary>

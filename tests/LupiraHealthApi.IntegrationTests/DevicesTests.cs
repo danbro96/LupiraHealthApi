@@ -5,7 +5,7 @@ using LupiraHealthApi.Domain;
 using LupiraHealthApi.Dtos.Devices;
 using Xunit;
 
-namespace LupiraHealthApi.Server.Tests;
+namespace LupiraHealthApi.IntegrationTests;
 
 public sealed class DevicesTests(HealthApiTestFactory factory) : IntegrationTest(factory)
 {

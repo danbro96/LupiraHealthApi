@@ -1,7 +1,7 @@
 using LupiraHealthApi.Telemetry;
 using Xunit;
 
-namespace LupiraHealthApi.Core.Tests;
+namespace LupiraHealthApi.UnitTests;
 
 public class PartitionBoundsTests
 {
