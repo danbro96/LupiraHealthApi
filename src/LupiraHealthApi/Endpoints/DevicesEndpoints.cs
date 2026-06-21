@@ -7,7 +7,7 @@ public static class DevicesEndpoints
 {
     public static IEndpointRouteBuilder MapDevices(this IEndpointRouteBuilder app)
     {
-        var g = app.MapGroup("/api/devices").RequireAuthorization("ApiPolicy").WithTags("Devices");
+        var g = app.MapGroup("/devices").RequireAuthorization("ApiPolicy").WithTags("Devices");
 
         g.MapGet("/", (Guid recordId, DevicesHandler h, CancellationToken ct) => h.ListAsync(recordId, ct))
             .WithSummary("List the devices registered to a health record.")

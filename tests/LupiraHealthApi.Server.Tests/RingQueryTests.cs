@@ -16,7 +16,7 @@ public sealed class RingQueryTests(HealthApiTestFactory factory) : IntegrationTe
         var now = DateTimeOffset.UtcNow;
         await IngestRingAsync(key, Enumerable.Range(0, 6).Select(i => RingSample(i + 1, "hr", now.AddMinutes(-6 + i), 60 + i)));
 
-        var buckets = await api.GetFromJsonAsync<List<RingBucketDto>>($"/api/health/ring?kind=hr&bucketSeconds=600&from={Q(now.AddHours(-1))}&to={Q(now.AddMinutes(1))}");
+        var buckets = await api.GetFromJsonAsync<List<RingBucketDto>>($"/health/ring?kind=hr&bucketSeconds=600&from={Q(now.AddHours(-1))}&to={Q(now.AddMinutes(1))}");
         Assert.NotNull(buckets);
         Assert.NotEmpty(buckets);
         Assert.Equal(6, buckets.Sum(b => b.Count));
@@ -28,7 +28,7 @@ public sealed class RingQueryTests(HealthApiTestFactory factory) : IntegrationTe
     {
         var api = Factory.ApiClient("alice@x.test");
         await BootstrapAsync(api);
-        var resp = await api.GetAsync($"/api/health/ring?kind=bloodpressure&from={Q(DateTimeOffset.UtcNow.AddHours(-1))}&to={Q(DateTimeOffset.UtcNow)}");
+        var resp = await api.GetAsync($"/health/ring?kind=bloodpressure&from={Q(DateTimeOffset.UtcNow.AddHours(-1))}&to={Q(DateTimeOffset.UtcNow)}");
         Assert.Equal(HttpStatusCode.BadRequest, resp.StatusCode);
     }
 
@@ -38,7 +38,7 @@ public sealed class RingQueryTests(HealthApiTestFactory factory) : IntegrationTe
         var api = Factory.ApiClient("alice@x.test");
         await SetupDeviceAsync(api);
         var now = DateTimeOffset.UtcNow;
-        Assert.Empty((await api.GetFromJsonAsync<List<RingBucketDto>>($"/api/health/ring?kind=hr&from={Q(now.AddHours(-1))}&to={Q(now)}"))!);
+        Assert.Empty((await api.GetFromJsonAsync<List<RingBucketDto>>($"/health/ring?kind=hr&from={Q(now.AddHours(-1))}&to={Q(now)}"))!);
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public sealed class RingQueryTests(HealthApiTestFactory factory) : IntegrationTe
         await IngestRingAsync(Factory.DeviceKeyClient(d1.ApiKey), [RingSample(1, "hr", now.AddMinutes(-2), 60)]);
         await IngestRingAsync(Factory.DeviceKeyClient(d2.ApiKey), [RingSample(1, "hr", now.AddMinutes(-1), 90)]);
 
-        var d1Buckets = await api.GetFromJsonAsync<List<RingBucketDto>>($"/api/health/ring?kind=hr&deviceId={d1.Device.Id}&bucketSeconds=3600&from={Q(now.AddHours(-1))}&to={Q(now.AddMinutes(1))}");
+        var d1Buckets = await api.GetFromJsonAsync<List<RingBucketDto>>($"/health/ring?kind=hr&deviceId={d1.Device.Id}&bucketSeconds=3600&from={Q(now.AddHours(-1))}&to={Q(now.AddMinutes(1))}");
         Assert.Equal(1, d1Buckets!.Sum(b => b.Count));
     }
 
@@ -68,10 +68,10 @@ public sealed class RingQueryTests(HealthApiTestFactory factory) : IntegrationTe
             DeviceSummary(2, 2, now.AddHours(-8), now.AddHours(-1), "{\"steps\":8000}"),
         ]);
 
-        var all = await api.GetFromJsonAsync<List<DeviceSummaryDto>>($"/api/health/summaries?from={Q(now.AddDays(-1))}&to={Q(now.AddMinutes(1))}");
+        var all = await api.GetFromJsonAsync<List<DeviceSummaryDto>>($"/health/summaries?from={Q(now.AddDays(-1))}&to={Q(now.AddMinutes(1))}");
         Assert.Equal(2, all!.Count);
 
-        var sleep = await api.GetFromJsonAsync<List<DeviceSummaryDto>>($"/api/health/summaries?kind=1&from={Q(now.AddDays(-1))}&to={Q(now.AddMinutes(1))}");
+        var sleep = await api.GetFromJsonAsync<List<DeviceSummaryDto>>($"/health/summaries?kind=1&from={Q(now.AddDays(-1))}&to={Q(now.AddMinutes(1))}");
         Assert.Single(sleep!);
         Assert.Equal(1, sleep![0].Kind);
     }
@@ -82,6 +82,6 @@ public sealed class RingQueryTests(HealthApiTestFactory factory) : IntegrationTe
         var api = Factory.ApiClient("alice@x.test");
         await SetupDeviceAsync(api);
         var now = DateTimeOffset.UtcNow;
-        Assert.Empty((await api.GetFromJsonAsync<List<DeviceSummaryDto>>($"/api/health/summaries?from={Q(now.AddDays(-1))}&to={Q(now)}"))!);
+        Assert.Empty((await api.GetFromJsonAsync<List<DeviceSummaryDto>>($"/health/summaries?from={Q(now.AddDays(-1))}&to={Q(now)}"))!);
     }
 }

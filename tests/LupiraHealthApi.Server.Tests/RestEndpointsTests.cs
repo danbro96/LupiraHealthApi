@@ -5,7 +5,7 @@ using Xunit;
 
 namespace LupiraHealthApi.Server.Tests;
 
-/// <summary>Generic REST surface: identity (/api/me) + health-record container CRUD.</summary>
+/// <summary>Generic REST surface: identity (/me) + health-record container CRUD.</summary>
 public sealed class RestEndpointsTests(HealthApiTestFactory factory) : IntegrationTest(factory)
 {
     [Fact]
@@ -26,18 +26,18 @@ public sealed class RestEndpointsTests(HealthApiTestFactory factory) : Integrati
 
         Assert.Equal("personal", first.Slug);
         Assert.Equal(first.Id, second.Id);
-        Assert.Single((await api.GetFromJsonAsync<List<HealthRecordDto>>("/api/records"))!);
+        Assert.Single((await api.GetFromJsonAsync<List<HealthRecordDto>>("/records"))!);
     }
 
     [Fact]
     public async Task Create_record_then_listed()
     {
         var api = Factory.ApiClient("alice@x.test");
-        var resp = await api.PostAsJsonAsync("/api/records", new CreateHealthRecordRequest { Slug = "travel", DisplayName = "Travel Health" });
+        var resp = await api.PostAsJsonAsync("/records", new CreateHealthRecordRequest { Slug = "travel", DisplayName = "Travel Health" });
         resp.EnsureSuccessStatusCode();
         var created = await resp.Content.ReadFromJsonAsync<HealthRecordDto>();
 
-        var list = await api.GetFromJsonAsync<List<HealthRecordDto>>("/api/records");
+        var list = await api.GetFromJsonAsync<List<HealthRecordDto>>("/records");
         Assert.Contains(list!, r => r.Id == created!.Id && r.Slug == "travel");
     }
 
@@ -45,7 +45,7 @@ public sealed class RestEndpointsTests(HealthApiTestFactory factory) : Integrati
     public async Task Create_record_with_empty_slug_is_400()
     {
         var api = Factory.ApiClient("alice@x.test");
-        var resp = await api.PostAsJsonAsync("/api/records", new CreateHealthRecordRequest { Slug = "   ", DisplayName = "Bad" });
+        var resp = await api.PostAsJsonAsync("/records", new CreateHealthRecordRequest { Slug = "   ", DisplayName = "Bad" });
         Assert.Equal(HttpStatusCode.BadRequest, resp.StatusCode);
     }
 
@@ -57,7 +57,7 @@ public sealed class RestEndpointsTests(HealthApiTestFactory factory) : Integrati
 
         var b = Factory.ApiClient("b@x.test");
         await BootstrapAsync(b);
-        var bList = await b.GetFromJsonAsync<List<HealthRecordDto>>("/api/records");
+        var bList = await b.GetFromJsonAsync<List<HealthRecordDto>>("/records");
         Assert.DoesNotContain(bList!, r => r.Id == recA.Id);
     }
 }

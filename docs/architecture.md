@@ -68,7 +68,7 @@ trusted.
 
 ## Ingest trust model
 
-The mobile uploader does **not** use OIDC. Device registration (`POST /api/devices`, an OIDC call) mints a
+The mobile uploader does **not** use OIDC. Device registration (`POST /devices`, an OIDC call) mints a
 one-time credential `{keyId}.{secret}`:
 
 - The secret is 256 bits of CSPRNG output, shown **once**; only its SHA-256 hash (`KeyHash`) is stored. The
@@ -80,7 +80,7 @@ one-time credential `{keyId}.{secret}`:
 The ingest handler **stamps the principal and device id onto every row from the verified key** — telemetry
 never trusts ids in the payload. Batches are NDJSON, one record per line; each row carries a device-assigned
 monotonic `seq` that is part of the primary key, and the merge is `ON CONFLICT DO NOTHING`. Retries and
-overlapping re-uploads are therefore idempotent and free. Retiring a device (`DELETE /api/devices/{id}`)
+overlapping re-uploads are therefore idempotent and free. Retiring a device (`DELETE /devices/{id}`)
 stamps `RetiredAt` and revokes its keys, so the next ingest call with a revoked key returns `401`.
 
 ## Error handling & transport mapping

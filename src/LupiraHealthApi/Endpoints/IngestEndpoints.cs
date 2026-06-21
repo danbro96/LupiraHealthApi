@@ -9,7 +9,7 @@ public static class IngestEndpoints
 {
     public static IEndpointRouteBuilder MapIngest(this IEndpointRouteBuilder app)
     {
-        var g = app.MapGroup("/api/ingest").RequireAuthorization("IngestPolicy").WithTags("Ingest");
+        var g = app.MapGroup("/ingest").RequireAuthorization("IngestPolicy").WithTags("Ingest");
 
         g.MapPost("/ring", (RingIngestHandler h, CancellationToken ct) => h.SamplesAsync(ct))
             .WithSummary("Ingest a batch of ring point-samples (NDJSON).")

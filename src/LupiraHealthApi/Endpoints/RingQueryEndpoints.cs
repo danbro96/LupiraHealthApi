@@ -8,7 +8,7 @@ public static class RingQueryEndpoints
 {
     public static IEndpointRouteBuilder MapRingQuery(this IEndpointRouteBuilder app)
     {
-        var g = app.MapGroup("/api/health").RequireAuthorization("ApiPolicy").WithTags("Ring");
+        var g = app.MapGroup("/health").RequireAuthorization("ApiPolicy").WithTags("Ring");
 
         g.MapGet("/ring", (string kind, DateTimeOffset? from, DateTimeOffset? to, int? bucketSeconds, Guid? deviceId, RingQueryHandler h, CancellationToken ct) => h.DownsampleAsync(kind, from, to, bucketSeconds, deviceId, ct))
             .WithSummary("Downsampled ring metric (avg/min/max/count per bucket).").Produces<List<RingBucketDto>>(StatusCodes.Status200OK).ProducesProblem(StatusCodes.Status400BadRequest);

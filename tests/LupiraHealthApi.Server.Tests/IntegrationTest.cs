@@ -23,19 +23,19 @@ public abstract class IntegrationTest(HealthApiTestFactory factory) : IAsyncLife
 
     // ---- REST fixture helpers ----
 
-    protected static async Task<MeDto> GetMeAsync(HttpClient api) => (await api.GetFromJsonAsync<MeDto>("/api/me"))!;
+    protected static async Task<MeDto> GetMeAsync(HttpClient api) => (await api.GetFromJsonAsync<MeDto>("/me"))!;
     protected static async Task<Guid> GetMyIdAsync(HttpClient api) => (await GetMeAsync(api)).Id;
 
     protected static async Task<HealthRecordDto> BootstrapAsync(HttpClient api)
     {
-        var resp = await api.PostAsync("/api/me/bootstrap", null);
+        var resp = await api.PostAsync("/me/bootstrap", null);
         resp.EnsureSuccessStatusCode();
         return (await resp.Content.ReadFromJsonAsync<HealthRecordDto>())!;
     }
 
     protected static async Task<RegisterDeviceResponse> RegisterDeviceAsync(HttpClient api, Guid recordId, DeviceKind kind = DeviceKind.SmartRing, string label = "My Ring")
     {
-        var resp = await api.PostAsJsonAsync("/api/devices", new RegisterDeviceRequest { HealthRecordId = recordId, Kind = kind, Label = label });
+        var resp = await api.PostAsJsonAsync("/devices", new RegisterDeviceRequest { HealthRecordId = recordId, Kind = kind, Label = label });
         resp.EnsureSuccessStatusCode();
         return (await resp.Content.ReadFromJsonAsync<RegisterDeviceResponse>())!;
     }
@@ -59,10 +59,10 @@ public abstract class IntegrationTest(HealthApiTestFactory factory) : IAsyncLife
     }
 
     protected static async Task<RingIngestReceipt> IngestRingAsync(HttpClient key, IEnumerable<string> lines) =>
-        (await (await PostNdjson(key, "/api/ingest/ring", lines)).Content.ReadFromJsonAsync<RingIngestReceipt>())!;
+        (await (await PostNdjson(key, "/ingest/ring", lines)).Content.ReadFromJsonAsync<RingIngestReceipt>())!;
 
     protected static async Task<RingIngestReceipt> IngestSummariesAsync(HttpClient key, IEnumerable<string> lines) =>
-        (await (await PostNdjson(key, "/api/ingest/summaries", lines)).Content.ReadFromJsonAsync<RingIngestReceipt>())!;
+        (await (await PostNdjson(key, "/ingest/summaries", lines)).Content.ReadFromJsonAsync<RingIngestReceipt>())!;
 
     // ---- payload builders ----
 

@@ -41,7 +41,7 @@ builder.Services
 // Background maintenance: pre-provision upcoming ring partitions (gated by config).
 builder.Services.AddHostedService<RingMaintenanceService>();
 
-// --- Auth: OIDC JWT for /api (human reads/writes); per-device API key for /api/ingest (the mobile uploader).
+// --- Auth: OIDC JWT for the REST surface (human reads/writes); per-device API key for /ingest (the mobile uploader).
 //           One identity authority (Authentik); the OIDC `sub` is the only cross-service join key. ---
 var authBuilder = builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

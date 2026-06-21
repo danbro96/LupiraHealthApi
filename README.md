@@ -62,15 +62,15 @@ exercise the API locally. With `ASPNETCORE_ENVIRONMENT=Development`, a dev-only 
 
 ```bash
 # Human/API calls — pretend to be this user (Development only; ignored otherwise)
-curl http://localhost:8080/api/me -H "X-Dev-User: you@example.com"
+curl http://localhost:8080/me -H "X-Dev-User: you@example.com"
 
 # Register a device — the response carries a one-time ingest key "{keyId}.{secret}"
-curl -X POST http://localhost:8080/api/devices -H "X-Dev-User: you@example.com" \
+curl -X POST http://localhost:8080/devices -H "X-Dev-User: you@example.com" \
   -H 'Content-Type: application/json' \
   -d '{"healthRecordId":"<record-guid>","kind":"SmartRing","label":"My ring"}'
 
 # Ingest calls — authenticate with that device key (this is the only ingest auth, in any environment)
-curl -X POST http://localhost:8080/api/ingest/ring \
+curl -X POST http://localhost:8080/ingest/ring \
   -H "Authorization: DeviceKey <keyId>.<secret>" -H 'Content-Type: application/x-ndjson' \
   --data-binary $'{"seq":1,"kind":"hr","ts":"2026-01-01T09:00:00Z","value":62}\n'
 ```
@@ -79,18 +79,18 @@ curl -X POST http://localhost:8080/api/ingest/ring \
 
 | Method | Path | Auth | Purpose |
 |---|---|---|---|
-| `GET` | `/api/me` | user | Resolve the caller's identity (provisioned on first call) |
-| `POST` | `/api/me/bootstrap` | user | Idempotently ensure the caller has a personal health record |
-| `GET` | `/api/records/` | user | List health records owned by the caller |
-| `POST` | `/api/records/` | user | Create a health record (caller becomes owner) |
-| `GET` | `/api/devices/?recordId=` | user | List devices on a record |
-| `POST` | `/api/devices/` | user | Register a device; returns a one-time ingest key |
-| `PUT` | `/api/devices/{id}` | user | Rename a device |
-| `DELETE` | `/api/devices/{id}` | user | Retire a device and revoke its ingest keys |
-| `POST` | `/api/ingest/ring` | device | Ingest a batch of ring point-samples (NDJSON) |
-| `POST` | `/api/ingest/summaries` | device | Ingest a batch of device-computed summaries (NDJSON) |
-| `GET` | `/api/health/ring` | user | Downsampled ring metric (avg/min/max/count per bucket) |
-| `GET` | `/api/health/summaries` | user | Device-computed summaries over a time range |
+| `GET` | `/me` | user | Resolve the caller's identity (provisioned on first call) |
+| `POST` | `/me/bootstrap` | user | Idempotently ensure the caller has a personal health record |
+| `GET` | `/records/` | user | List health records owned by the caller |
+| `POST` | `/records/` | user | Create a health record (caller becomes owner) |
+| `GET` | `/devices/?recordId=` | user | List devices on a record |
+| `POST` | `/devices/` | user | Register a device; returns a one-time ingest key |
+| `PUT` | `/devices/{id}` | user | Rename a device |
+| `DELETE` | `/devices/{id}` | user | Retire a device and revoke its ingest keys |
+| `POST` | `/ingest/ring` | device | Ingest a batch of ring point-samples (NDJSON) |
+| `POST` | `/ingest/summaries` | device | Ingest a batch of device-computed summaries (NDJSON) |
+| `GET` | `/health/ring` | user | Downsampled ring metric (avg/min/max/count per bucket) |
+| `GET` | `/health/summaries` | user | Device-computed summaries over a time range |
 
 **user** = OIDC JWT (or the dev header in Development), via the `ApiPolicy`. **device** = per-device API key
 `Authorization: DeviceKey {keyId}.{secret}`, via the `IngestPolicy`. Errors are returned as RFC 7807

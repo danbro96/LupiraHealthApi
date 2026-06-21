@@ -7,7 +7,7 @@ public static class HealthRecordsEndpoints
 {
     public static IEndpointRouteBuilder MapHealthRecords(this IEndpointRouteBuilder app)
     {
-        var g = app.MapGroup("/api/records").RequireAuthorization("ApiPolicy").WithTags("HealthRecords");
+        var g = app.MapGroup("/records").RequireAuthorization("ApiPolicy").WithTags("HealthRecords");
 
         g.MapGet("/", (HealthRecordsHandler h, CancellationToken ct) => h.ListAsync(ct))
             .WithSummary("List the health records the caller owns.")

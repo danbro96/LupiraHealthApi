@@ -22,7 +22,7 @@ public sealed class SecurityRegressionTests(HealthApiTestFactory factory) : Inte
 
         var b = Factory.ApiClient("b@x.test");
         await BootstrapAsync(b);
-        Assert.Empty((await b.GetFromJsonAsync<List<RingBucketDto>>($"/api/health/ring?kind=hr&from={Q(now.AddHours(-1))}&to={Q(now.AddMinutes(1))}"))!);
+        Assert.Empty((await b.GetFromJsonAsync<List<RingBucketDto>>($"/health/ring?kind=hr&from={Q(now.AddHours(-1))}&to={Q(now.AddMinutes(1))}"))!);
     }
 
     [Fact]
@@ -35,8 +35,8 @@ public sealed class SecurityRegressionTests(HealthApiTestFactory factory) : Inte
         var b = Factory.ApiClient("b@x.test");
         await BootstrapAsync(b);
 
-        Assert.Equal(HttpStatusCode.Forbidden, (await b.GetAsync($"/api/devices?recordId={recA.Id}")).StatusCode);
-        var forge = await b.PostAsJsonAsync("/api/devices", new RegisterDeviceRequest { HealthRecordId = recA.Id, Kind = DeviceKind.SmartRing, Label = "Hijack" });
+        Assert.Equal(HttpStatusCode.Forbidden, (await b.GetAsync($"/devices?recordId={recA.Id}")).StatusCode);
+        var forge = await b.PostAsJsonAsync("/devices", new RegisterDeviceRequest { HealthRecordId = recA.Id, Kind = DeviceKind.SmartRing, Label = "Hijack" });
         Assert.Equal(HttpStatusCode.Forbidden, forge.StatusCode);
     }
 }
