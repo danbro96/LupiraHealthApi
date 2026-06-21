@@ -8,8 +8,8 @@ using NpgsqlTypes;
 
 namespace LupiraHealthApi.Application.Telemetry;
 
-/// <summary>Ingests batched ring point-samples and device-computed summaries (NDJSON). Same idempotent merge as
-/// location: device-assigned <c>seq</c> in the PK + <c>ON CONFLICT DO NOTHING</c>, monthly partitions pre-created on
+/// <summary>Ingests batched ring point-samples and device-computed summaries (NDJSON). Idempotent merge:
+/// device-assigned <c>seq</c> in the PK + <c>ON CONFLICT DO NOTHING</c>, monthly partitions pre-created on
 /// demand. ids are stamped from the authenticated device key.</summary>
 public sealed class RingIngestService(NpgsqlDataSource db, PartitionManager partitions)
 {
