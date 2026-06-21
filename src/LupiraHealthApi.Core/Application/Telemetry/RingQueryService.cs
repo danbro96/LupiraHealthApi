@@ -29,8 +29,11 @@ public sealed class RingQueryService(NpgsqlDataSource db)
         cmd.Parameters.AddWithValue("bucket", bucket);
         await using var r = await cmd.ExecuteReaderAsync(ct);
         while (await r.ReadAsync(ct))
-            result.Add(new RingBucketDto(new DateTimeOffset(r.GetFieldValue<DateTime>(0), TimeSpan.Zero),
-                Db.Double0(r, 1), Db.Double0(r, 2), Db.Double0(r, 3), r.GetInt64(4)));
+            result.Add(new RingBucketDto
+            {
+                BucketTs = new DateTimeOffset(r.GetFieldValue<DateTime>(0), TimeSpan.Zero),
+                Avg = Db.Double0(r, 1), Min = Db.Double0(r, 2), Max = Db.Double0(r, 3), Count = r.GetInt64(4),
+            });
         return OpResult<List<RingBucketDto>>.Ok(result);
     }
 
@@ -54,10 +57,13 @@ public sealed class RingQueryService(NpgsqlDataSource db)
         cmd.Parameters.AddWithValue("to", NpgsqlDbType.TimestampTz, to.UtcDateTime);
         await using var r = await cmd.ExecuteReaderAsync(ct);
         while (await r.ReadAsync(ct))
-            result.Add(new DeviceSummaryDto(r.GetGuid(0), r.GetInt16(1),
-                new DateTimeOffset(r.GetFieldValue<DateTime>(2), TimeSpan.Zero),
-                new DateTimeOffset(r.GetFieldValue<DateTime>(3), TimeSpan.Zero),
-                r.GetFieldValue<string>(4)));
+            result.Add(new DeviceSummaryDto
+            {
+                DeviceId = r.GetGuid(0), Kind = r.GetInt16(1),
+                PeriodStart = new DateTimeOffset(r.GetFieldValue<DateTime>(2), TimeSpan.Zero),
+                PeriodEnd = new DateTimeOffset(r.GetFieldValue<DateTime>(3), TimeSpan.Zero),
+                Payload = r.GetFieldValue<string>(4),
+            });
         return OpResult<List<DeviceSummaryDto>>.Ok(result);
     }
 }

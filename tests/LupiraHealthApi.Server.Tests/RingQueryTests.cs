@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using LupiraHealthApi.Domain;
 using LupiraHealthApi.Dtos.Ring;
 using Xunit;
 
@@ -11,7 +12,7 @@ public sealed class RingQueryTests(HealthApiTestFactory factory) : IntegrationTe
     public async Task Downsample_returns_buckets()
     {
         var api = Factory.ApiClient("alice@x.test");
-        var (_, key, _) = await SetupDeviceAsync(api, "SmartRing");
+        var (_, key, _) = await SetupDeviceAsync(api);
         var now = DateTimeOffset.UtcNow;
         await IngestRingAsync(key, Enumerable.Range(0, 6).Select(i => RingSample(i + 1, "hr", now.AddMinutes(-6 + i), 60 + i)));
 
@@ -35,7 +36,7 @@ public sealed class RingQueryTests(HealthApiTestFactory factory) : IntegrationTe
     public async Task Downsample_empty_range_is_empty()
     {
         var api = Factory.ApiClient("alice@x.test");
-        await SetupDeviceAsync(api, "SmartRing");
+        await SetupDeviceAsync(api);
         var now = DateTimeOffset.UtcNow;
         Assert.Empty((await api.GetFromJsonAsync<List<RingBucketDto>>($"/api/health/ring?kind=hr&from={Q(now.AddHours(-1))}&to={Q(now)}"))!);
     }
@@ -45,8 +46,8 @@ public sealed class RingQueryTests(HealthApiTestFactory factory) : IntegrationTe
     {
         var api = Factory.ApiClient("alice@x.test");
         var record = await BootstrapAsync(api);
-        var d1 = await RegisterDeviceAsync(api, record.Id, "SmartRing", "Ring1");
-        var d2 = await RegisterDeviceAsync(api, record.Id, "SmartRing", "Ring2");
+        var d1 = await RegisterDeviceAsync(api, record.Id, DeviceKind.SmartRing, "Ring1");
+        var d2 = await RegisterDeviceAsync(api, record.Id, DeviceKind.SmartRing, "Ring2");
         var now = DateTimeOffset.UtcNow;
         await IngestRingAsync(Factory.DeviceKeyClient(d1.ApiKey), [RingSample(1, "hr", now.AddMinutes(-2), 60)]);
         await IngestRingAsync(Factory.DeviceKeyClient(d2.ApiKey), [RingSample(1, "hr", now.AddMinutes(-1), 90)]);
@@ -59,7 +60,7 @@ public sealed class RingQueryTests(HealthApiTestFactory factory) : IntegrationTe
     public async Task Summaries_query_returns_ingested_and_filters_by_kind()
     {
         var api = Factory.ApiClient("alice@x.test");
-        var (_, key, _) = await SetupDeviceAsync(api, "SmartRing");
+        var (_, key, _) = await SetupDeviceAsync(api);
         var now = DateTimeOffset.UtcNow;
         await IngestSummariesAsync(key,
         [
@@ -79,7 +80,7 @@ public sealed class RingQueryTests(HealthApiTestFactory factory) : IntegrationTe
     public async Task Summaries_empty_is_empty()
     {
         var api = Factory.ApiClient("alice@x.test");
-        await SetupDeviceAsync(api, "SmartRing");
+        await SetupDeviceAsync(api);
         var now = DateTimeOffset.UtcNow;
         Assert.Empty((await api.GetFromJsonAsync<List<DeviceSummaryDto>>($"/api/health/summaries?from={Q(now.AddDays(-1))}&to={Q(now)}"))!);
     }

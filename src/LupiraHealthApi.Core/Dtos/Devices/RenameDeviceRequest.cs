@@ -1,4 +1,7 @@
 namespace LupiraHealthApi.Dtos.Devices;
 
 /// <summary>Rename a device.</summary>
-public record RenameDeviceRequest(string Label);
+public sealed class RenameDeviceRequest
+{
+    public required string Label { get; set; }
+}

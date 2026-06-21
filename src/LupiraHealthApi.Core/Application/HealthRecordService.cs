@@ -11,7 +11,7 @@ public sealed class HealthRecordService(IDocumentSession session)
     public async Task<OpResult<List<HealthRecordDto>>> ListAsync(Guid principalId, CancellationToken ct = default)
     {
         var records = await session.Query<HealthRecord>().Where(r => r.OwnerPrincipalId == principalId).ToListAsync(ct);
-        return OpResult<List<HealthRecordDto>>.Ok(records.Select(r => new HealthRecordDto(r.Id, r.Slug, r.DisplayName)).ToList());
+        return OpResult<List<HealthRecordDto>>.Ok(records.Select(r => new HealthRecordDto { Id = r.Id, Slug = r.Slug, DisplayName = r.DisplayName }).ToList());
     }
 
     public async Task<OpResult<HealthRecordDto>> CreateAsync(Guid principalId, CreateHealthRecordRequest r, CancellationToken ct = default)
@@ -21,7 +21,7 @@ public sealed class HealthRecordService(IDocumentSession session)
         var record = new HealthRecord { Id = Guid.NewGuid(), Slug = r.Slug.Trim(), DisplayName = r.DisplayName, OwnerPrincipalId = principalId };
         session.Store(record);
         await session.SaveChangesAsync(ct);
-        return OpResult<HealthRecordDto>.Ok(new HealthRecordDto(record.Id, record.Slug, record.DisplayName));
+        return OpResult<HealthRecordDto>.Ok(new HealthRecordDto { Id = record.Id, Slug = record.Slug, DisplayName = record.DisplayName });
     }
 
     /// <summary>Ensures the caller has a <c>personal</c> health record; idempotent (a second call creates nothing).</summary>
@@ -29,7 +29,7 @@ public sealed class HealthRecordService(IDocumentSession session)
     {
         var existing = (await ListAsync(principalId, ct)).Value!;
         var personal = existing.FirstOrDefault(r => r.Slug == "personal")
-            ?? (await CreateAsync(principalId, new CreateHealthRecordRequest("personal", "My Health"), ct)).Value!;
+            ?? (await CreateAsync(principalId, new CreateHealthRecordRequest { Slug = "personal", DisplayName = "My Health" }, ct)).Value!;
         return OpResult<HealthRecordDto>.Ok(personal);
     }
 }

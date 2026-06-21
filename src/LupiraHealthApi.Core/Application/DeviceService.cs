@@ -22,13 +22,12 @@ public sealed class DeviceService(IDocumentSession session, AccessResolver acces
     {
         if (!await access.CanWriteRecordAsync(principalId, r.HealthRecordId, ct)) return OpResult<RegisterDeviceResponse>.Forbidden("No write access to this health record.");
         if (string.IsNullOrWhiteSpace(r.Label)) return OpResult<RegisterDeviceResponse>.Invalid("Label is required.");
-        if (!Enum.TryParse<DeviceKind>(r.Kind, ignoreCase: true, out var kind)) return OpResult<RegisterDeviceResponse>.Invalid("Unknown device kind.");
 
         var device = new Device
         {
             Id = Guid.NewGuid(),
             HealthRecordId = r.HealthRecordId,
-            Kind = kind,
+            Kind = r.Kind,
             Label = r.Label.Trim(),
             ExternalId = r.ExternalId,
             RegisteredAt = DateTimeOffset.UtcNow,
@@ -47,7 +46,7 @@ public sealed class DeviceService(IDocumentSession session, AccessResolver acces
         });
         await session.SaveChangesAsync(ct);
 
-        return OpResult<RegisterDeviceResponse>.Ok(new RegisterDeviceResponse(device.ToResponse(), keyId, DeviceKeyHashing.Format(keyId, secret)));
+        return OpResult<RegisterDeviceResponse>.Ok(new RegisterDeviceResponse { Device = device.ToResponse(), KeyId = keyId, ApiKey = DeviceKeyHashing.Format(keyId, secret) });
     }
 
     public async Task<OpResult<DeviceDto>> RenameAsync(Guid principalId, Guid deviceId, RenameDeviceRequest r, CancellationToken ct = default)

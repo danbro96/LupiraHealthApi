@@ -33,7 +33,7 @@ public sealed class RestEndpointsTests(HealthApiTestFactory factory) : Integrati
     public async Task Create_record_then_listed()
     {
         var api = Factory.ApiClient("alice@x.test");
-        var resp = await api.PostAsJsonAsync("/api/records", new CreateHealthRecordRequest("travel", "Travel Health"));
+        var resp = await api.PostAsJsonAsync("/api/records", new CreateHealthRecordRequest { Slug = "travel", DisplayName = "Travel Health" });
         resp.EnsureSuccessStatusCode();
         var created = await resp.Content.ReadFromJsonAsync<HealthRecordDto>();
 
@@ -45,7 +45,7 @@ public sealed class RestEndpointsTests(HealthApiTestFactory factory) : Integrati
     public async Task Create_record_with_empty_slug_is_400()
     {
         var api = Factory.ApiClient("alice@x.test");
-        var resp = await api.PostAsJsonAsync("/api/records", new CreateHealthRecordRequest("   ", "Bad"));
+        var resp = await api.PostAsJsonAsync("/api/records", new CreateHealthRecordRequest { Slug = "   ", DisplayName = "Bad" });
         Assert.Equal(HttpStatusCode.BadRequest, resp.StatusCode);
     }
 

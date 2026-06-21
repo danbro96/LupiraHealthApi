@@ -1,5 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Text;
+using LupiraHealthApi.Domain;
 using LupiraHealthApi.Dtos.Devices;
 using Xunit;
 
@@ -13,14 +15,14 @@ public sealed class DevicesTests(HealthApiTestFactory factory) : IntegrationTest
         var api = Factory.ApiClient("alice@x.test");
         var record = await BootstrapAsync(api);
 
-        var reg = await RegisterDeviceAsync(api, record.Id, "SmartRing", "Oura");
+        var reg = await RegisterDeviceAsync(api, record.Id, DeviceKind.SmartRing, "Oura");
         Assert.False(string.IsNullOrWhiteSpace(reg.ApiKey));
         Assert.Contains('.', reg.ApiKey);
-        Assert.Equal("SmartRing", reg.Device.Kind);
+        Assert.Equal(DeviceKind.SmartRing, reg.Device.Kind);
 
         Assert.Single((await api.GetFromJsonAsync<List<DeviceDto>>($"/api/devices?recordId={record.Id}"))!);
 
-        var rename = await api.PutAsJsonAsync($"/api/devices/{reg.Device.Id}", new RenameDeviceRequest("Oura Ring 4"));
+        var rename = await api.PutAsJsonAsync($"/api/devices/{reg.Device.Id}", new RenameDeviceRequest { Label = "Oura Ring 4" });
         rename.EnsureSuccessStatusCode();
         Assert.Equal("Oura Ring 4", (await rename.Content.ReadFromJsonAsync<DeviceDto>())!.Label);
 
@@ -32,7 +34,7 @@ public sealed class DevicesTests(HealthApiTestFactory factory) : IntegrationTest
     {
         var api = Factory.ApiClient("alice@x.test");
         var record = await BootstrapAsync(api);
-        var resp = await api.PostAsJsonAsync("/api/devices", new RegisterDeviceRequest(record.Id, "Phone", "  ", null));
+        var resp = await api.PostAsJsonAsync("/api/devices", new RegisterDeviceRequest { HealthRecordId = record.Id, Kind = DeviceKind.Phone, Label = "  " });
         Assert.Equal(HttpStatusCode.BadRequest, resp.StatusCode);
     }
 
@@ -41,7 +43,9 @@ public sealed class DevicesTests(HealthApiTestFactory factory) : IntegrationTest
     {
         var api = Factory.ApiClient("alice@x.test");
         var record = await BootstrapAsync(api);
-        var resp = await api.PostAsJsonAsync("/api/devices", new RegisterDeviceRequest(record.Id, "Toaster", "Kitchen", null));
+        // Unknown DeviceKind name is rejected at deserialization (JsonStringEnumConverter).
+        var json = $$"""{"healthRecordId":"{{record.Id}}","kind":"Toaster","label":"Kitchen"}""";
+        var resp = await api.PostAsync("/api/devices", new StringContent(json, Encoding.UTF8, "application/json"));
         Assert.Equal(HttpStatusCode.BadRequest, resp.StatusCode);
     }
 
@@ -53,7 +57,7 @@ public sealed class DevicesTests(HealthApiTestFactory factory) : IntegrationTest
 
         var b = Factory.ApiClient("b@x.test");
         await BootstrapAsync(b);
-        var resp = await b.PostAsJsonAsync("/api/devices", new RegisterDeviceRequest(recA.Id, "Phone", "Forged", null));
+        var resp = await b.PostAsJsonAsync("/api/devices", new RegisterDeviceRequest { HealthRecordId = recA.Id, Kind = DeviceKind.Phone, Label = "Forged" });
         Assert.Equal(HttpStatusCode.Forbidden, resp.StatusCode);
     }
 
@@ -73,7 +77,7 @@ public sealed class DevicesTests(HealthApiTestFactory factory) : IntegrationTest
     {
         var api = Factory.ApiClient("alice@x.test");
         await BootstrapAsync(api);
-        var resp = await api.PutAsJsonAsync($"/api/devices/{Guid.NewGuid()}", new RenameDeviceRequest("X"));
+        var resp = await api.PutAsJsonAsync($"/api/devices/{Guid.NewGuid()}", new RenameDeviceRequest { Label = "X" });
         Assert.Equal(HttpStatusCode.NotFound, resp.StatusCode);
     }
 
@@ -83,7 +87,7 @@ public sealed class DevicesTests(HealthApiTestFactory factory) : IntegrationTest
         var api = Factory.ApiClient("alice@x.test");
         var record = await BootstrapAsync(api);
         var reg = await RegisterDeviceAsync(api, record.Id);
-        var resp = await api.PutAsJsonAsync($"/api/devices/{reg.Device.Id}", new RenameDeviceRequest("  "));
+        var resp = await api.PutAsJsonAsync($"/api/devices/{reg.Device.Id}", new RenameDeviceRequest { Label = "  " });
         Assert.Equal(HttpStatusCode.BadRequest, resp.StatusCode);
     }
 
@@ -113,8 +117,8 @@ public sealed class DevicesTests(HealthApiTestFactory factory) : IntegrationTest
         var reg = await RegisterDeviceAsync(api, record.Id);
         var key = Factory.DeviceKeyClient(reg.ApiKey);
 
-        Assert.Equal(HttpStatusCode.Accepted, (await PostNdjson(key, "/api/ingest/location", [Fix(1, DateTimeOffset.UtcNow.AddMinutes(-1), 59.3, 18.0)])).StatusCode);
+        Assert.Equal(HttpStatusCode.Accepted, (await PostNdjson(key, "/api/ingest/ring", [RingSample(1, "hr", DateTimeOffset.UtcNow.AddMinutes(-1), 60)])).StatusCode);
         await api.DeleteAsync($"/api/devices/{reg.Device.Id}");
-        Assert.Equal(HttpStatusCode.Unauthorized, (await PostNdjson(key, "/api/ingest/location", [Fix(2, DateTimeOffset.UtcNow, 59.3, 18.0)])).StatusCode);
+        Assert.Equal(HttpStatusCode.Unauthorized, (await PostNdjson(key, "/api/ingest/ring", [RingSample(2, "hr", DateTimeOffset.UtcNow, 61)])).StatusCode);
     }
 }

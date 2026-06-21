@@ -5,6 +5,7 @@ using LupiraHealthApi.Endpoints;
 using LupiraHealthApi.Handlers;
 using LupiraHealthApi.Health;
 using LupiraHealthApi.Telemetry;
+using System.Text.Json.Serialization;
 using Marten;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -14,11 +15,12 @@ using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --- Bounded context (Marten document store on the `health` schema + the raw-Npgsql `telemetry` path + the
-// transport-neutral services). Connection string is read lazily from ConnectionStrings:Postgres inside AddHealthCore. ---
+// --- Bounded context (Marten document store on the `health` schema + the raw-Npgsql `telemetry` path for ring
+// telemetry + the transport-neutral services). Connection string is read lazily inside AddHealthCore. ---
 builder.Services.AddHealthCore();
 
 // --- Host-only services: identity (claims -> Core PrincipalDirectory) + the thin REST/ingest handlers. ---
@@ -27,13 +29,11 @@ builder.Services.AddScoped<CurrentUser>();
 builder.Services.AddScoped<MeHandler>();
 builder.Services.AddScoped<HealthRecordsHandler>();
 builder.Services.AddScoped<DevicesHandler>();
-builder.Services.AddScoped<LocationIngestHandler>();
-builder.Services.AddScoped<LocationQueryHandler>();
 builder.Services.AddScoped<RingIngestHandler>();
 builder.Services.AddScoped<RingQueryHandler>();
 
-// Background maintenance: partition provisioning + nightly rollup + retention drop (gated by config).
-builder.Services.AddHostedService<LocationMaintenanceService>();
+// Background maintenance: pre-provision upcoming ring partitions (gated by config).
+builder.Services.AddHostedService<RingMaintenanceService>();
 
 // --- Auth: OIDC JWT for /api (human reads/writes); per-device API key for /api/ingest (the mobile uploader).
 //           One identity authority (Authentik); the OIDC `sub` is the only cross-service join key. ---
@@ -88,12 +88,15 @@ builder.Logging.AddOpenTelemetry(o =>
 builder.Services.AddHealthChecks()
     .AddCheck<DatabaseReadyCheck>("postgres", tags: ["ready"]);
 
+// Emit enum names (not ints) on the wire across the API surface.
+builder.Services.ConfigureHttpJsonOptions(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
 // One-shot schema apply (deploy step: `dotnet LupiraHealthApi.dll --apply-schema`). Applies the Marten `health`
-// schema AND the raw `telemetry` schema (tables + initial partitions), which Marten's diff never touches.
+// schema AND the raw `telemetry` schema (ring tables + initial partitions), which Marten's diff never touches.
 if (args.Contains("--apply-schema"))
 {
     var store = app.Services.GetRequiredService<IDocumentStore>();
@@ -106,6 +109,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapOpenApi();   // /openapi/v1.json
+app.MapScalarApiReference();   // /scalar/v1
 
 // Health probes: /livez = liveness (no dependency checks); /readyz = readiness (Postgres reachable).
 app.MapHealthChecks("/livez", new HealthCheckOptions { Predicate = _ => false });
@@ -117,7 +121,6 @@ app.MapMe();
 app.MapHealthRecords();
 app.MapDevices();
 app.MapIngest();
-app.MapLocationQuery();
 app.MapRingQuery();
 
 app.Run();

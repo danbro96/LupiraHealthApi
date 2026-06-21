@@ -1,25 +1,22 @@
 # lupira-health-api — TrueNAS Custom App `lupira-health-api`.
-# Single .NET 10 service: REST (/api) for health-record/device management + location/ring telemetry ingest & query,
-# over its OWN Postgres (lupira_health). Sensitive data is isolated in a separate DB+role from lupira-cal.
+# Single .NET 10 service: REST (/api) for health-record + device management + ring telemetry ingest & query,
+# over its OWN Postgres (lupira_health). Isolated in a separate DB+role from the other Lupira apps (no cross-grants).
+# (Location/presence telemetry is a separate service — lupira-location-api.)
 services:
   lupira-health-api:
     image: danbro96/lupira-health-api:${IMAGE_TAG:-latest}
     container_name: lupira-health-api
     environment:
-      # Postgres — Marten `health` schema + raw `telemetry` schema in one DB. NO grant on lupira_cal (and vice-versa).
+      # Postgres — Marten `health` schema + raw `telemetry` schema (ring tables) in one DB. NO grant on other apps' DBs.
       ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=lupira_health;Username=lupira_health_user;Password=${LUPIRA_HEALTH_DB_PASSWORD:?required}"
 
-      # /api auth — Authentik OIDC (JWT). Same issuer as lupira-cal; the OIDC `sub` is the only cross-service join key.
+      # /api auth — Authentik OIDC (JWT). Same issuer as the other Lupira apps; the OIDC `sub` is the only cross-service join key.
       Auth__Authority: ${AUTH_AUTHORITY:-https://auth.lupira.com/application/o/lupira-health/}
       Auth__Audience: ${AUTH_AUDIENCE:-lupira-health}
 
       # Telemetry ingest auth is per-device API key (minted at device registration) — no extra config.
 
-      # Reverse-geocoding for place labels — self-hosted Nominatim. Empty disables it (cache-only / coarse).
-      Nominatim__BaseUrl: ${NOMINATIM_BASE_URL:-}
-
-      # Telemetry retention + maintenance.
-      Telemetry__LocationRetentionDays: ${LOCATION_RETENTION_DAYS:-90}
+      # Ring partition maintenance (pre-provision upcoming monthly partitions).
       Telemetry__MaintenanceEnabled: ${TELEMETRY_MAINTENANCE_ENABLED:-true}
 
       # OTEL — same Basic Auth header convention as the other .NET apps (http/protobuf; 5-min metric cadence).

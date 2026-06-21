@@ -1,7 +1,6 @@
 using System.Globalization;
 using System.Text.Json;
 using LupiraHealthApi.Domain.Telemetry;
-using LupiraHealthApi.Dtos.Location;
 using LupiraHealthApi.Dtos.Ring;
 using LupiraHealthApi.Telemetry;
 using Npgsql;
@@ -48,7 +47,7 @@ public sealed class RingIngestService(NpgsqlDataSource db, PartitionManager part
         }
 
         var highWater = await MaxSeqAsync("ring_sample", principalId, deviceId, ct);
-        return OpResult<RingIngestReceipt>.Ok(new RingIngestReceipt(submitted, inserted, accepted.Count - inserted, rejects.Count, highWater, rejects));
+        return OpResult<RingIngestReceipt>.Ok(new RingIngestReceipt { Submitted = submitted, Inserted = inserted, Duplicates = accepted.Count - inserted, Rejected = rejects.Count, HighWaterSeq = highWater, Rejects = rejects });
     }
 
     public async Task<OpResult<RingIngestReceipt>> IngestSummariesAsync(Guid principalId, Guid deviceId, Stream body, CancellationToken ct = default)
@@ -82,7 +81,7 @@ public sealed class RingIngestService(NpgsqlDataSource db, PartitionManager part
         }
 
         var highWater = await MaxSeqAsync("device_summary", principalId, deviceId, ct);
-        return OpResult<RingIngestReceipt>.Ok(new RingIngestReceipt(submitted, inserted, accepted.Count - inserted, rejects.Count, highWater, rejects));
+        return OpResult<RingIngestReceipt>.Ok(new RingIngestReceipt { Submitted = submitted, Inserted = inserted, Duplicates = accepted.Count - inserted, Rejected = rejects.Count, HighWaterSeq = highWater, Rejects = rejects });
     }
 
     private static async Task<int> InsertSamplesAsync(NpgsqlConnection conn, NpgsqlTransaction tx, Guid pid, Guid did, List<RingSampleRow> rows, CancellationToken ct)
