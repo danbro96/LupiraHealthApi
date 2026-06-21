@@ -32,6 +32,12 @@ builder.Services.AddScoped<DevicesHandler>();
 builder.Services.AddScoped<RingIngestHandler>();
 builder.Services.AddScoped<RingQueryHandler>();
 
+// --- Read-only MCP surface (HealthTools) over the same Core services; LAN/WireGuard-only (see UseMcpLanOnly). ---
+builder.Services
+    .AddMcpServer()
+    .WithHttpTransport()
+    .WithToolsFromAssembly();
+
 // Background maintenance: pre-provision upcoming ring partitions (gated by config).
 builder.Services.AddHostedService<RingMaintenanceService>();
 
@@ -105,6 +111,9 @@ if (args.Contains("--apply-schema"))
     return;
 }
 
+// Backstop before auth: a /mcp request carrying Cloudflare edge headers came through the tunnel — 404 it.
+app.UseMcpLanOnly();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -122,6 +131,9 @@ app.MapHealthRecords();
 app.MapDevices();
 app.MapIngest();
 app.MapRingQuery();
+
+// Agent surface: OIDC-gated (ApiPolicy excludes the DeviceKey scheme; in Dev X-Dev-User works too).
+app.MapMcp("/mcp").RequireAuthorization("ApiPolicy");
 
 app.Run();
 
