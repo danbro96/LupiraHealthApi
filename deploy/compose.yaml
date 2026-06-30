@@ -1,5 +1,5 @@
 # lupira-health-api — TrueNAS Custom App `lupira-health-api`.
-# Single .NET 10 service: REST (/api) for health-record + device management + ring telemetry ingest & query,
+# Single .NET 10 service: REST at root for health-record + device management + ring telemetry ingest & query,
 # over its OWN Postgres (lupira_health). Isolated in a separate DB+role from the other Lupira apps (no cross-grants).
 # (Location/presence telemetry is a separate service — lupira-location-api.)
 services:
@@ -10,7 +10,7 @@ services:
       # Postgres — Marten `health` schema + raw `telemetry` schema (ring tables) in one DB. NO grant on other apps' DBs.
       ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=lupira_health;Username=lupira_health_user;Password=${LUPIRA_HEALTH_DB_PASSWORD:?required}"
 
-      # /api auth — Authentik OIDC (JWT). Same issuer as the other Lupira apps; the OIDC `sub` is the only cross-service join key.
+      # REST auth — Authentik OIDC (JWT). Same issuer as the other Lupira apps; the OIDC `sub` is the only cross-service join key.
       Auth__Authority: ${AUTH_AUTHORITY:-https://auth.lupira.com/application/o/lupira-health/}
       Auth__Audience: ${AUTH_AUDIENCE:-lupira-health}
 
@@ -24,7 +24,7 @@ services:
       OTEL_EXPORTER_OTLP_PROTOCOL: ${OTEL_EXPORTER_OTLP_PROTOCOL:-http/protobuf}
       OTEL_EXPORTER_OTLP_HEADERS: ${OTEL_EXPORTER_OTLP_HEADERS:-}
       OTEL_METRIC_EXPORT_INTERVAL: ${OTEL_METRIC_EXPORT_INTERVAL:-300000}
-      OTEL_RESOURCE_ATTRIBUTES: ${OTEL_RESOURCE_ATTRIBUTES:-deployment.environment=prod,host.name=medelynas}
+      OTEL_RESOURCE_ATTRIBUTES: ${OTEL_RESOURCE_ATTRIBUTES:-deployment.environment=prod}
     ports:
       - "${HOST_PORT:-41180}:8080"
     healthcheck:
