@@ -21,7 +21,7 @@ authenticates humans with OIDC and devices with per-device API keys.
 - **REST** under `/api` — see the [endpoint map](#endpoint-map).
 - **OpenAPI** document at `/openapi/v1.json`.
 - **Interactive API reference** ([Scalar](https://scalar.com)) at `/scalar/v1`.
-- No MCP surface, gRPC, or message bus — plain HTTP/JSON only.
+- **MCP** at `/mcp` — read-only agent tools (`whoami`, `list_health_records`, `list_devices`, `read_vitals`, `read_summaries`); OIDC-gated, LAN/WireGuard-only. No gRPC or message bus.
 
 ## Tech stack
 
