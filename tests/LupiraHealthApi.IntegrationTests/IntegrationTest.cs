@@ -24,8 +24,6 @@ public abstract class IntegrationTest(HealthApiTestFactory factory) : IAsyncLife
     public async Task InitializeAsync() => await Factory.ResetAsync();
     public Task DisposeAsync() => Task.CompletedTask;
 
-    // ---- REST fixture helpers ----
-
     protected static async Task<MeDto> GetMeAsync(HttpClient api) => (await api.GetFromJsonAsync<MeDto>("/me"))!;
     protected static async Task<Guid> GetMyIdAsync(HttpClient api) => (await GetMeAsync(api)).Id;
 
@@ -52,8 +50,6 @@ public abstract class IntegrationTest(HealthApiTestFactory factory) : IAsyncLife
         return (pid, Factory.DeviceKeyClient(reg.ApiKey), reg.Device.Id);
     }
 
-    // ---- NDJSON ingest helpers ----
-
     protected static Task<HttpResponseMessage> PostNdjson(HttpClient client, string url, IEnumerable<string> lines)
     {
         var content = new StringContent(string.Join('\n', lines), Encoding.UTF8);
@@ -66,8 +62,6 @@ public abstract class IntegrationTest(HealthApiTestFactory factory) : IAsyncLife
 
     protected static async Task<RingIngestReceipt> IngestSummariesAsync(HttpClient key, IEnumerable<string> lines) =>
         (await (await PostNdjson(key, "/ingest/summaries", lines)).Content.ReadFromJsonAsync<RingIngestReceipt>())!;
-
-    // ---- payload builders ----
 
     protected static string RingSample(long seq, string kind, DateTimeOffset ts, double value) =>
         string.Create(CultureInfo.InvariantCulture, $"{{\"seq\":{seq},\"kind\":\"{kind}\",\"ts\":\"{ts:O}\",\"value\":{value.ToString(CultureInfo.InvariantCulture)}}}");
