@@ -1,8 +1,9 @@
+using LupiraHealthApi.Domain.Identity;
 using LupiraHealthApi.Domain;
 using Marten;
 using Weasel.Core;
 
-namespace LupiraHealthApi.Domain;
+namespace LupiraHealthApi.Data;
 
 /// <summary>Configures the Marten store for the Health API in the <c>health</c> schema: plain documents only (phase 1
 /// has no event-sourced aggregates). The high-frequency ring time-series lives in a separate <c>telemetry</c> schema

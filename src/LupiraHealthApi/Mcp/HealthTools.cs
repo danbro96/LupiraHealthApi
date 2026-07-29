@@ -1,13 +1,13 @@
-using LupiraHealthApi.Application;
 using LupiraHealthApi.Application.Telemetry;
+using LupiraHealthApi.Application;
 using LupiraHealthApi.Auth;
 using LupiraHealthApi.Domain.Telemetry;
 using LupiraHealthApi.Dtos.Devices;
 using LupiraHealthApi.Dtos.Me;
 using LupiraHealthApi.Dtos.Records;
 using LupiraHealthApi.Dtos.Ring;
-using ModelContextProtocol;
 using ModelContextProtocol.Server;
+using ModelContextProtocol;
 using System.ComponentModel;
 
 namespace LupiraHealthApi.Mcp;

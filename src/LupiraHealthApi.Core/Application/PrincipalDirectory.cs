@@ -1,3 +1,4 @@
+using LupiraHealthApi.Domain.Identity;
 using LupiraHealthApi.Domain;
 using Marten;
 using Npgsql;

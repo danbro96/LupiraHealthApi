@@ -1,6 +1,6 @@
-using System.Net;
-using System.Net.Http.Json;
 using LupiraHealthApi.Dtos.Records;
+using System.Net.Http.Json;
+using System.Net;
 using Xunit;
 
 namespace LupiraHealthApi.IntegrationTests;

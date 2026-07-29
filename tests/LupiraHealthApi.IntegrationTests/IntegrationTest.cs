@@ -1,12 +1,13 @@
-using System.Globalization;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using System.Text;
+using Marten;
 using LupiraHealthApi.Domain;
 using LupiraHealthApi.Dtos.Devices;
 using LupiraHealthApi.Dtos.Me;
 using LupiraHealthApi.Dtos.Records;
 using LupiraHealthApi.Dtos.Ring;
+using System.Globalization;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Text;
 using Xunit;
 
 namespace LupiraHealthApi.IntegrationTests;
@@ -17,6 +18,8 @@ namespace LupiraHealthApi.IntegrationTests;
 public abstract class IntegrationTest(HealthApiTestFactory factory) : IAsyncLifetime
 {
     protected readonly HealthApiTestFactory Factory = factory;
+
+    protected IDocumentStore Store => Factory.Store;
 
     public async Task InitializeAsync() => await Factory.ResetAsync();
     public Task DisposeAsync() => Task.CompletedTask;

@@ -1,5 +1,6 @@
 using LupiraHealthApi.Application;
 using LupiraHealthApi.Auth;
+using LupiraHealthApi.Data;
 using LupiraHealthApi.Domain;
 using Marten;
 using Microsoft.Extensions.Configuration;

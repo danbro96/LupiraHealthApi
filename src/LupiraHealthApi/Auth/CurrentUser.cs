@@ -1,4 +1,5 @@
 using LupiraHealthApi.Application;
+using LupiraHealthApi.Domain.Identity;
 using LupiraHealthApi.Domain;
 using System.Security.Claims;
 

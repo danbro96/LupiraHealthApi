@@ -1,10 +1,10 @@
-using System.Globalization;
-using System.Text.Json;
 using LupiraHealthApi.Domain.Telemetry;
 using LupiraHealthApi.Dtos.Ring;
 using LupiraHealthApi.Telemetry;
 using Npgsql;
 using NpgsqlTypes;
+using System.Globalization;
+using System.Text.Json;
 
 namespace LupiraHealthApi.Application.Telemetry;
 
