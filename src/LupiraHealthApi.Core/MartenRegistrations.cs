@@ -16,7 +16,11 @@ public static class MartenRegistrations
         opts.UseSystemTextJsonForSerialization(EnumStorage.AsString);
 
         // Identity + ownership container + devices.
-        opts.Schema.For<Principal>().Index(x => x.AuthentikSub).Index(x => x.Email);
+        // The Authentik sub is the resolution anchor and is unique — without the constraint, concurrent
+        // first-sight logins each insert their own row and the caller silently resolves to whichever one
+        // Postgres returns first. Email stays non-unique: it is mutable, and an `email|{email}` placeholder
+        // row legitimately shares an email with its real-sub counterpart until the upgrade lands.
+        opts.Schema.For<Principal>().Index(x => x.AuthentikSub, i => i.IsUnique = true).Index(x => x.Email);
         opts.Schema.For<HealthRecord>().Index(x => x.OwnerPrincipalId);
         opts.Schema.For<Device>().Index(x => x.HealthRecordId);
         opts.Schema.For<DeviceApiKey>().Index(x => x.PrincipalId).Index(x => x.DeviceId);
