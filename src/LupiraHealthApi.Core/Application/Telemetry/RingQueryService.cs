@@ -22,8 +22,8 @@ public sealed class RingQueryService(NpgsqlDataSource db)
         await using var conn = await db.OpenConnectionAsync(ct);
         await using var cmd = new NpgsqlCommand(sql, conn);
         cmd.Parameters.AddWithValue("pid", pid);
-        cmd.Parameters.AddWithValue("did", (object?)deviceId ?? DBNull.Value);
-        cmd.Parameters.AddWithValue("kind", (short)metric);
+        cmd.Parameters.AddWithValue("did", (object?) deviceId ?? DBNull.Value);
+        cmd.Parameters.AddWithValue("kind", (short) metric);
         cmd.Parameters.AddWithValue("from", NpgsqlDbType.TimestampTz, from.UtcDateTime);
         cmd.Parameters.AddWithValue("to", NpgsqlDbType.TimestampTz, to.UtcDateTime);
         cmd.Parameters.AddWithValue("bucket", bucket);
@@ -32,7 +32,10 @@ public sealed class RingQueryService(NpgsqlDataSource db)
             result.Add(new RingBucketDto
             {
                 BucketTs = new DateTimeOffset(r.GetFieldValue<DateTime>(0), TimeSpan.Zero),
-                Avg = Db.Double0(r, 1), Min = Db.Double0(r, 2), Max = Db.Double0(r, 3), Count = r.GetInt64(4),
+                Avg = Db.Double0(r, 1),
+                Min = Db.Double0(r, 2),
+                Max = Db.Double0(r, 3),
+                Count = r.GetInt64(4),
             });
         return OpResult<List<RingBucketDto>>.Ok(result);
     }
@@ -51,15 +54,16 @@ public sealed class RingQueryService(NpgsqlDataSource db)
         await using var conn = await db.OpenConnectionAsync(ct);
         await using var cmd = new NpgsqlCommand(sql, conn);
         cmd.Parameters.AddWithValue("pid", pid);
-        cmd.Parameters.AddWithValue("did", (object?)deviceId ?? DBNull.Value);
-        cmd.Parameters.AddWithValue("kind", (object?)kind ?? DBNull.Value);
+        cmd.Parameters.AddWithValue("did", (object?) deviceId ?? DBNull.Value);
+        cmd.Parameters.AddWithValue("kind", (object?) kind ?? DBNull.Value);
         cmd.Parameters.AddWithValue("from", NpgsqlDbType.TimestampTz, from.UtcDateTime);
         cmd.Parameters.AddWithValue("to", NpgsqlDbType.TimestampTz, to.UtcDateTime);
         await using var r = await cmd.ExecuteReaderAsync(ct);
         while (await r.ReadAsync(ct))
             result.Add(new DeviceSummaryDto
             {
-                DeviceId = r.GetGuid(0), Kind = r.GetInt16(1),
+                DeviceId = r.GetGuid(0),
+                Kind = r.GetInt16(1),
                 PeriodStart = new DateTimeOffset(r.GetFieldValue<DateTime>(2), TimeSpan.Zero),
                 PeriodEnd = new DateTimeOffset(r.GetFieldValue<DateTime>(3), TimeSpan.Zero),
                 Payload = r.GetFieldValue<string>(4),

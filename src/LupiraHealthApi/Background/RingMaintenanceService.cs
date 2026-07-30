@@ -23,6 +23,7 @@ public sealed class RingMaintenanceService(
         {
             try { await RunOnceAsync(ct); }
             catch (Exception ex) { logger.LogWarning(ex, "Ring maintenance pass failed."); }
+
             try { await Task.Delay(TimeSpan.FromHours(1), ct); }
             catch (OperationCanceledException) { break; }
         }

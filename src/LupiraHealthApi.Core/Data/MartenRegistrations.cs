@@ -1,5 +1,5 @@
-using LupiraHealthApi.Domain.Identity;
 using LupiraHealthApi.Domain;
+using LupiraHealthApi.Domain.Identity;
 using Marten;
 using Weasel.Core;
 

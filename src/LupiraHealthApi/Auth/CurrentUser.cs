@@ -1,7 +1,6 @@
+using System.Security.Claims;
 using LupiraHealthApi.Application;
 using LupiraHealthApi.Domain.Identity;
-using LupiraHealthApi.Domain;
-using System.Security.Claims;
 
 namespace LupiraHealthApi.Auth;
 

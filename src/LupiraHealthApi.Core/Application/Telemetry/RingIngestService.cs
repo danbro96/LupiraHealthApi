@@ -1,10 +1,10 @@
+using System.Globalization;
+using System.Text.Json;
 using LupiraHealthApi.Domain.Telemetry;
 using LupiraHealthApi.Dtos.Ring;
 using LupiraHealthApi.Telemetry;
 using Npgsql;
 using NpgsqlTypes;
-using System.Globalization;
-using System.Text.Json;
 
 namespace LupiraHealthApi.Application.Telemetry;
 
@@ -30,6 +30,7 @@ public sealed class RingIngestService(NpgsqlDataSource db, PartitionManager part
             if (string.IsNullOrWhiteSpace(line)) continue;
             submitted++;
             if (submitted > MaxRows) { rejects.Add(new IngestReject(null, "batch_too_large")); break; }
+
             var (row, reason, seq) = ParseSample(line, maxFuture, minPast);
             if (row is not null) accepted.Add(row);
             else rejects.Add(new IngestReject(seq, reason!));
@@ -64,6 +65,7 @@ public sealed class RingIngestService(NpgsqlDataSource db, PartitionManager part
             if (string.IsNullOrWhiteSpace(line)) continue;
             submitted++;
             if (submitted > MaxRows) { rejects.Add(new IngestReject(null, "batch_too_large")); break; }
+
             var (row, reason, seq) = ParseSummary(line, maxFuture, minPast);
             if (row is not null) accepted.Add(row);
             else rejects.Add(new IngestReject(seq, reason!));
@@ -88,7 +90,7 @@ public sealed class RingIngestService(NpgsqlDataSource db, PartitionManager part
     {
         var n = rows.Count;
         var kind = new short[n]; var ts = new DateTime[n]; var value = new decimal[n]; var seq = new long[n];
-        for (var i = 0; i < n; i++) { kind[i] = (short)rows[i].Kind; ts[i] = rows[i].Ts.UtcDateTime; value[i] = rows[i].Value; seq[i] = rows[i].Seq; }
+        for (var i = 0; i < n; i++) { kind[i] = (short) rows[i].Kind; ts[i] = rows[i].Ts.UtcDateTime; value[i] = rows[i].Value; seq[i] = rows[i].Seq; }
 
         const string sql = """
             INSERT INTO telemetry.ring_sample (principal_id, device_id, kind, ts, value, seq)
@@ -149,6 +151,7 @@ public sealed class RingIngestService(NpgsqlDataSource db, PartitionManager part
     {
         JsonDocument doc;
         try { doc = JsonDocument.Parse(line); } catch { return (null, "invalid_json", null); }
+
         using (doc)
         {
             var o = doc.RootElement;
@@ -160,7 +163,7 @@ public sealed class RingIngestService(NpgsqlDataSource db, PartitionManager part
             if (ts > maxFuture || ts < minPast) return (null, "ts_out_of_range", seq);
             var value = ReadDouble(o, "value");
             if (value is null) return (null, "missing_value", seq);
-            return (new RingSampleRow(seq.Value, metric, ts, (decimal)value.Value), null, seq);
+            return (new RingSampleRow(seq.Value, metric, ts, (decimal) value.Value), null, seq);
         }
     }
 
@@ -168,6 +171,7 @@ public sealed class RingIngestService(NpgsqlDataSource db, PartitionManager part
     {
         JsonDocument doc;
         try { doc = JsonDocument.Parse(line); } catch { return (null, "invalid_json", null); }
+
         using (doc)
         {
             var o = doc.RootElement;
@@ -201,7 +205,7 @@ public sealed class RingIngestService(NpgsqlDataSource db, PartitionManager part
         o.TryGetProperty(name, out var e) && e.ValueKind == JsonValueKind.Number && e.TryGetInt64(out var v) ? v : null;
 
     private static short? ReadShort(JsonElement o, string name) =>
-        o.TryGetProperty(name, out var e) && e.ValueKind == JsonValueKind.Number && e.TryGetInt32(out var v) ? (short)v : null;
+        o.TryGetProperty(name, out var e) && e.ValueKind == JsonValueKind.Number && e.TryGetInt32(out var v) ? (short) v : null;
 
     private static string? ReadString(JsonElement o, string name) =>
         o.TryGetProperty(name, out var e) && e.ValueKind == JsonValueKind.String ? e.GetString() : null;

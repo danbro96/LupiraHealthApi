@@ -13,7 +13,7 @@ public sealed class RingIngestHandler(IHttpContextAccessor http, RingIngestServi
         var ctx = http.HttpContext!;
         var (pid, did) = DeviceKeyClaims.Get(ctx.User);
         var r = await ingest.IngestSamplesAsync(pid, did, ctx.Request.Body, ct);
-        return TypedResults.Accepted((string?)null, r.Value!);
+        return TypedResults.Accepted((string?) null, r.Value!);
     }
 
     public async Task<Results<Accepted<RingIngestReceipt>, UnauthorizedHttpResult>> SummariesAsync(CancellationToken ct)
@@ -21,6 +21,6 @@ public sealed class RingIngestHandler(IHttpContextAccessor http, RingIngestServi
         var ctx = http.HttpContext!;
         var (pid, did) = DeviceKeyClaims.Get(ctx.User);
         var r = await ingest.IngestSummariesAsync(pid, did, ctx.Request.Body, ct);
-        return TypedResults.Accepted((string?)null, r.Value!);
+        return TypedResults.Accepted((string?) null, r.Value!);
     }
 }

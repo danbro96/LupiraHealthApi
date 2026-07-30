@@ -24,6 +24,6 @@ public sealed class RingQueryHandler(CurrentUser user, RingQueryService q)
         var u = await user.GetAsync(ct);
         var t = to ?? DateTimeOffset.UtcNow;
         var f = from ?? t.AddDays(-30);
-        return TypedResults.Ok((await q.SummariesAsync(u.Id, deviceId, (short?)kind, f, t, ct)).Value!);
+        return TypedResults.Ok((await q.SummariesAsync(u.Id, deviceId, (short?) kind, f, t, ct)).Value!);
     }
 }

@@ -1,14 +1,14 @@
-using LupiraHealthApi.Application.Telemetry;
+using System.ComponentModel;
 using LupiraHealthApi.Application;
+using LupiraHealthApi.Application.Telemetry;
 using LupiraHealthApi.Auth;
 using LupiraHealthApi.Domain.Telemetry;
 using LupiraHealthApi.Dtos.Devices;
 using LupiraHealthApi.Dtos.Me;
 using LupiraHealthApi.Dtos.Records;
 using LupiraHealthApi.Dtos.Ring;
-using ModelContextProtocol.Server;
 using ModelContextProtocol;
-using System.ComponentModel;
+using ModelContextProtocol.Server;
 
 namespace LupiraHealthApi.Mcp;
 
@@ -85,7 +85,7 @@ public sealed class HealthTools(CurrentUser user, HealthRecordService records, D
         var me = await user.GetAsync(ct);
         var t = to ?? DateTimeOffset.UtcNow;
         var f = from ?? t.AddDays(-30);
-        return Require(await ring.SummariesAsync(me.Id, deviceId, (short?)kind, f, t, ct));
+        return Require(await ring.SummariesAsync(me.Id, deviceId, (short?) kind, f, t, ct));
     }
 
     /// <summary>Unwraps a service outcome or surfaces it to the agent as an <see cref="McpException"/>.</summary>
