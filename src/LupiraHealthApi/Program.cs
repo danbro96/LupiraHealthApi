@@ -110,7 +110,11 @@ builder.Services.AddHealthChecks()
     .AddCheck<DatabaseReadyCheck>("postgres", tags: ["ready"]);
 
 // Emit enum names (not ints) on the wire across the API surface.
-builder.Services.ConfigureHttpJsonOptions(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+builder.Services.ConfigureHttpJsonOptions(o =>
+{
+    o.SerializerOptions.NumberHandling = JsonNumberHandling.Strict;
+    o.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 builder.Services.AddOpenApi("v1", options =>
 {
