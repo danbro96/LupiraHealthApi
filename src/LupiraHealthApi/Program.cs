@@ -34,7 +34,7 @@ builder.Services.AddScoped<DevicesHandler>();
 builder.Services.AddScoped<RingIngestHandler>();
 builder.Services.AddScoped<RingQueryHandler>();
 
-// --- Read-only MCP surface (HealthTools) over the same Core services; LAN/WireGuard-only (see UseMcpLanOnly). ---
+// --- Read-only MCP surface (HealthTools) over the same Core services; LAN/WireGuard-only (see UseLanOnlySurfaces). ---
 builder.Services
     .AddMcpServer()
     .WithHttpTransport()
@@ -45,20 +45,35 @@ builder.Services.AddHostedService<RingMaintenanceService>();
 
 // --- Auth: OIDC JWT for the REST surface (human reads/writes); per-device API key for /ingest (the mobile uploader).
 //           One identity authority (Authentik); the OIDC `sub` is the only cross-service join key. ---
+// `dotnet build` regenerates openapi/ via getdocument, which boots this Program with no real config —
+// skip the guard there (and in Development, where the dev-header scheme needs no authority).
+var isOpenApiBuild = Environment.GetCommandLineArgs()
+    .Any(a => a.Contains("getdocument", StringComparison.OrdinalIgnoreCase));
+
+var oidc = builder.Configuration.GetSection(OidcAuthOptions.SectionName).Get<OidcAuthOptions>() ?? new OidcAuthOptions();
+if (!isOpenApiBuild && !builder.Environment.IsDevelopment()
+    && (string.IsNullOrWhiteSpace(oidc.Authority) || string.IsNullOrWhiteSpace(oidc.Audience)))
+    throw new InvalidOperationException("Auth:Oidc Authority + Audience are required outside Development.");
+
 var authBuilder = builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.Authority = builder.Configuration["Auth:Authority"];
-        options.Audience = builder.Configuration["Auth:Audience"];
+        options.Authority = oidc.Authority;
+        options.Audience = oidc.Audience;
         options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
         options.Events = new JwtBearerEvents
         {
-            // MCP auth spec: a 401 on /mcp advertises the RFC 9728 metadata so clients can discover the issuer.
+            // MCP auth spec: a 401 on /mcp advertises the RFC 9728 metadata so clients can discover the
+            // issuer. HandleResponse suppresses the default bare "Bearer" header so exactly one goes out.
             OnChallenge = ctx =>
             {
                 if (ctx.Request.Path.StartsWithSegments("/mcp"))
-                    ctx.Response.Headers.Append("WWW-Authenticate",
-                        $"Bearer resource_metadata=\"{McpResourceMetadata.ResourceMetadataUrl(ctx.Request)}\"");
+                {
+                    ctx.HandleResponse();
+                    ctx.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    ctx.Response.Headers.WWWAuthenticate =
+                        $"Bearer resource_metadata=\"{McpResourceMetadata.ResourceMetadataUrl(ctx.Request)}\"";
+                }
                 return Task.CompletedTask;
             },
         };
@@ -170,8 +185,9 @@ if (args.Contains("--apply-schema"))
     return;
 }
 
-// Backstop before auth: a /mcp request carrying Cloudflare edge headers came through the tunnel — 404 it.
-app.UseMcpLanOnly();
+// LAN-only surfaces (/mcp + its discovery metadata): 404 anything arriving through the tunnel,
+// before auth so a tunnelled probe never even receives a challenge.
+app.UseLanOnlySurfaces();
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -201,7 +217,7 @@ app.MapRingQuery();
 
 // Agent surface: OIDC-gated (ApiPolicy excludes the DeviceKey scheme; in Dev X-Dev-User works too).
 // RFC 9728 metadata lets MCP clients discover the Authentik issuer from the 401 challenge.
-app.MapMcpResourceMetadata(app.Configuration["Auth:Authority"]);
+app.MapMcpResourceMetadata(app.Configuration["Auth:Oidc:Authority"]);
 app.MapMcp("/mcp").RequireAuthorization("ApiPolicy");
 
 app.Run();

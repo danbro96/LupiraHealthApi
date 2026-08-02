@@ -31,7 +31,7 @@ public sealed class HealthApiTestFactory : WebApplicationFactory<Program>
                 ["ConnectionStrings:Postgres"] = _postgres.GetConnectionString(),
                 ["Telemetry:MaintenanceEnabled"] = "false",
                 // Never contacted (no token is ever validated in tests); only echoed by the RFC 9728 metadata.
-                ["Auth:Authority"] = "https://auth.test/application/o/lupira-health/",
+                ["Auth:Oidc:Authority"] = "https://auth.test/application/o/lupira-health/",
             }));
     }
 

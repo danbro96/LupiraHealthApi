@@ -104,8 +104,8 @@ hosts; the values below are examples.
 | Variable | Required | Example | Purpose |
 |---|---|---|---|
 | `ConnectionStrings__Postgres` | yes | `Host=localhost;Database=lupira_health;Username=…;Password=…` | Postgres for both schemas |
-| `Auth__Authority` | prod | `https://id.example.com/application/o/health/` | OIDC issuer (token validation) |
-| `Auth__Audience` | prod | `lupira-health` | Expected JWT audience |
+| `Auth__Oidc__Authority` | prod | `https://id.example.com/application/o/health/` | OIDC issuer (token validation) |
+| `Auth__Oidc__Audience` | prod | `lupira-health` | Expected JWT audience |
 | `Telemetry__MaintenanceEnabled` | no | `true` | Pre-provision upcoming monthly partitions (background job) |
 | `ASPNETCORE_ENVIRONMENT` | no | `Development` | `Development` enables the `X-Dev-User` auth on-ramp |
 | `ASPNETCORE_URLS` | no | `http://+:8080` | Listen address (container default) |
@@ -113,7 +113,7 @@ hosts; the values below are examples.
 | `OTEL_EXPORTER_OTLP_HEADERS` | no | `Authorization=Basic …` | OTLP auth headers |
 | `OTEL_EXPORTER_OTLP_PROTOCOL` | no | `http/protobuf` | OTLP protocol |
 
-In Development, `Auth__Authority`/`Auth__Audience` may be omitted because the `X-Dev-User` header stands in for a
+In Development, `Auth__Oidc__Authority`/`Auth__Oidc__Audience` may be omitted because the `X-Dev-User` header stands in for a
 real token.
 
 ## Database & schema
@@ -138,8 +138,8 @@ defaults** — override them via environment to suit your host:
 docker build -t lupira-health-api .
 docker run -p 8080:8080 \
   -e ConnectionStrings__Postgres="Host=…;Database=lupira_health;Username=…;Password=…" \
-  -e Auth__Authority="https://id.example.com/application/o/health/" \
-  -e Auth__Audience="lupira-health" \
+  -e Auth__Oidc__Authority="https://id.example.com/application/o/health/" \
+  -e Auth__Oidc__Audience="lupira-health" \
   lupira-health-api
 ```
 
