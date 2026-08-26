@@ -1,9 +1,9 @@
-using LupiraHealthApi.Core.Domain.Identity;
+using System.Net;
+using System.Net.Http.Json;
 using LupiraHealthApi.Core.Domain;
+using LupiraHealthApi.Core.Domain.Identity;
 using LupiraHealthApi.Core.Dtos.Devices;
 using LupiraHealthApi.Core.Dtos.Ring;
-using System.Net.Http.Json;
-using System.Net;
 using Xunit;
 
 namespace LupiraHealthApi.IntegrationTests;
