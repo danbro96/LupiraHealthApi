@@ -1,5 +1,4 @@
 using LupiraHealthApi.Core.Application.Telemetry;
-using LupiraHealthApi.Core.Domain;
 using LupiraHealthApi.Core.Domain.Telemetry;
 using Xunit;
 

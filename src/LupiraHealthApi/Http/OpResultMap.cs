@@ -1,4 +1,4 @@
-using LupiraHealthApi.Core.Application;
+using LupiraHealthApi.Core.Application.Results;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace LupiraHealthApi.Http;

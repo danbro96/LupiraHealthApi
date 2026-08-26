@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text.Json;
+using LupiraHealthApi.Core.Application.Results;
 using LupiraHealthApi.Core.Domain.Telemetry;
 using LupiraHealthApi.Core.Dtos.Ring;
 using LupiraHealthApi.Core.Telemetry;

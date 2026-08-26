@@ -1,3 +1,4 @@
+using LupiraHealthApi.Core.Application.Results;
 using LupiraHealthApi.Core.Domain.Telemetry;
 using LupiraHealthApi.Core.Dtos.Ring;
 using Npgsql;
