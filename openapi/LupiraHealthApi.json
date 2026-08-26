@@ -24,7 +24,24 @@
             }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -52,7 +69,24 @@
             }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -78,6 +112,26 @@
                   "items": {
                     "$ref": "#/components/schemas/HealthRecordDto"
                   }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -111,6 +165,26 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HealthRecordDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -156,6 +230,26 @@
           },
           "403": {
             "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -216,6 +310,26 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -264,7 +378,14 @@
             }
           },
           "404": {
-            "description": "Not Found"
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
@@ -278,6 +399,26 @@
           },
           "403": {
             "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -314,10 +455,37 @@
             "description": "No Content"
           },
           "404": {
-            "description": "Not Found"
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           },
           "403": {
             "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -360,6 +528,26 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -392,6 +580,26 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RingIngestReceipt"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -475,6 +683,26 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -537,6 +765,26 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -564,7 +812,8 @@
               "string"
             ]
           }
-        }
+        },
+        "description": "Create a health record. The caller is granted `owner`."
       },
       "DeviceDto": {
         "required": [
@@ -607,7 +856,8 @@
             ],
             "format": "date-time"
           }
-        }
+        },
+        "description": "A registered device."
       },
       "DeviceKind": {
         "enum": [
@@ -617,7 +867,8 @@
           "Scale",
           "BloodPressureCuff",
           "Other"
-        ]
+        ],
+        "description": "Kind of registered device that may feed this health record."
       },
       "DeviceSummaryDto": {
         "required": [
@@ -648,7 +899,8 @@
           "payload": {
             "type": "string"
           }
-        }
+        },
+        "description": "A device-computed summary (sleep session, daily totals…). string DeviceSummaryDto.Payload is the raw JSON the device sent."
       },
       "HealthRecordDto": {
         "required": [
@@ -670,7 +922,8 @@
               "string"
             ]
           }
-        }
+        },
+        "description": "A health record owned by the caller."
       },
       "IngestReject": {
         "required": [
@@ -689,7 +942,8 @@
           "reason": {
             "type": "string"
           }
-        }
+        },
+        "description": "A per-row rejection within an otherwise-accepted ingest batch (permanent — the uploader should drop + log it)."
       },
       "MeDto": {
         "required": [
@@ -711,7 +965,8 @@
               "string"
             ]
           }
-        }
+        },
+        "description": "The resolved local identity of the caller."
       },
       "ProblemDetails": {
         "type": "object",
@@ -746,8 +1001,15 @@
               "null",
               "string"
             ]
+          },
+          "traceId": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
-        }
+        },
+        "description": "RFC 9457 problem details."
       },
       "RegisterDeviceRequest": {
         "required": [
@@ -773,7 +1035,8 @@
               "string"
             ]
           }
-        }
+        },
+        "description": "Register a device against a health record. `Kind` is a `DeviceKind` name (case-insensitive)."
       },
       "RegisterDeviceResponse": {
         "required": [
@@ -793,7 +1056,8 @@
           "apiKey": {
             "type": "string"
           }
-        }
+        },
+        "description": "Result of registering a device. string RegisterDeviceResponse.ApiKey is the one-time plaintext ingest credential\n            (`{keyId:N}.{secret}`) — it is shown only here and never retrievable again; only its hash is stored."
       },
       "RenameDeviceRequest": {
         "required": [
@@ -804,7 +1068,8 @@
           "label": {
             "type": "string"
           }
-        }
+        },
+        "description": "Rename a device."
       },
       "RingBucketDto": {
         "required": [
@@ -836,7 +1101,8 @@
             "type": "integer",
             "format": "int64"
           }
-        }
+        },
+        "description": "One downsampled bucket of a ring metric over a time range."
       },
       "RingIngestReceipt": {
         "required": [
@@ -877,7 +1143,8 @@
               "$ref": "#/components/schemas/IngestReject"
             }
           }
-        }
+        },
+        "description": "The outcome of a ring-sample (or device-summary) ingest batch. Idempotent re-uploads show as duplicates."
       }
     },
     "securitySchemes": {
