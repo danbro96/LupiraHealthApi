@@ -5,6 +5,8 @@ namespace LupiraHealthApi.Core.Dtos.Devices;
 public sealed class RegisterDeviceResponse
 {
     public required DeviceDto Device { get; set; }
+
     public required Guid KeyId { get; set; }
+
     public required string ApiKey { get; set; }
 }

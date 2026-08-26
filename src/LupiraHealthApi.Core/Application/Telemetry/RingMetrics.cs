@@ -9,7 +9,7 @@ public static class RingMetrics
     {
         metric = RingMetric.Unknown;
         if (string.IsNullOrWhiteSpace(raw)) return false;
-        switch (raw.Trim().ToLowerInvariant().Replace("_", ""))
+        switch (raw.Trim().ToLowerInvariant().Replace("_", string.Empty))
         {
             case "hr": case "heartrate": metric = RingMetric.HeartRate; return true;
             case "hrv": metric = RingMetric.Hrv; return true;

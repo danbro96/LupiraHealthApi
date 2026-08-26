@@ -4,5 +4,6 @@ namespace LupiraHealthApi.Core.Dtos.Records;
 public sealed class CreateHealthRecordRequest
 {
     public required string Slug { get; set; }
+
     public string? DisplayName { get; set; }
 }

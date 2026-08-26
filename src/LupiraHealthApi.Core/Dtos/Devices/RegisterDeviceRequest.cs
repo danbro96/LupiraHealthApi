@@ -6,7 +6,10 @@ namespace LupiraHealthApi.Core.Dtos.Devices;
 public sealed class RegisterDeviceRequest
 {
     public required Guid HealthRecordId { get; set; }
+
     public required DeviceKind Kind { get; set; }
+
     public required string Label { get; set; }
+
     public string? ExternalId { get; set; }
 }

@@ -7,7 +7,10 @@ namespace LupiraHealthApi.Core.Domain;
 public sealed class HealthRecord
 {
     public Guid Id { get; set; }
-    public string Slug { get; set; } = "";
+
+    public string Slug { get; set; } = string.Empty;
+
     public string? DisplayName { get; set; }
+
     public Guid OwnerPrincipalId { get; set; }
 }

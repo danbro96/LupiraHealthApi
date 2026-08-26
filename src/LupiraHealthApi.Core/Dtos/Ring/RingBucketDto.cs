@@ -4,8 +4,12 @@ namespace LupiraHealthApi.Core.Dtos.Ring;
 public sealed class RingBucketDto
 {
     public required DateTimeOffset BucketTs { get; set; }
+
     public required double Avg { get; set; }
+
     public required double Min { get; set; }
+
     public required double Max { get; set; }
+
     public required long Count { get; set; }
 }

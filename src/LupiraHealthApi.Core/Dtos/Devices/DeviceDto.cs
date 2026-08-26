@@ -6,10 +6,16 @@ namespace LupiraHealthApi.Core.Dtos.Devices;
 public sealed class DeviceDto
 {
     public required Guid Id { get; set; }
+
     public required Guid HealthRecordId { get; set; }
+
     public required DeviceKind Kind { get; set; }
+
     public required string Label { get; set; }
+
     public string? ExternalId { get; set; }
+
     public required DateTimeOffset RegisteredAt { get; set; }
+
     public DateTimeOffset? RetiredAt { get; set; }
 }

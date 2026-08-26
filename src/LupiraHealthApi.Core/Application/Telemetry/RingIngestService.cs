@@ -15,6 +15,7 @@ namespace LupiraHealthApi.Core.Application.Telemetry;
 public sealed class RingIngestService(NpgsqlDataSource db, PartitionManager partitions)
 {
     private const int MaxRows = 10_000;
+
     public int RetentionDays { get; init; } = 400;
 
     public async Task<OpResult<RingIngestReceipt>> IngestSamplesAsync(Guid principalId, Guid deviceId, Stream body, CancellationToken ct = default)
@@ -30,7 +31,11 @@ public sealed class RingIngestService(NpgsqlDataSource db, PartitionManager part
         {
             if (string.IsNullOrWhiteSpace(line)) continue;
             submitted++;
-            if (submitted > MaxRows) { rejects.Add(new IngestReject(null, "batch_too_large")); break; }
+            if (submitted > MaxRows)
+            {
+                rejects.Add(new IngestReject(null, "batch_too_large"));
+                break;
+            }
 
             var (row, reason, seq) = ParseSample(line, maxFuture, minPast);
             if (row is not null) accepted.Add(row);
@@ -65,7 +70,11 @@ public sealed class RingIngestService(NpgsqlDataSource db, PartitionManager part
         {
             if (string.IsNullOrWhiteSpace(line)) continue;
             submitted++;
-            if (submitted > MaxRows) { rejects.Add(new IngestReject(null, "batch_too_large")); break; }
+            if (submitted > MaxRows)
+            {
+                rejects.Add(new IngestReject(null, "batch_too_large"));
+                break;
+            }
 
             var (row, reason, seq) = ParseSummary(line, maxFuture, minPast);
             if (row is not null) accepted.Add(row);
@@ -90,8 +99,17 @@ public sealed class RingIngestService(NpgsqlDataSource db, PartitionManager part
     private static async Task<int> InsertSamplesAsync(NpgsqlConnection conn, NpgsqlTransaction tx, Guid pid, Guid did, List<RingSampleRow> rows, CancellationToken ct)
     {
         var n = rows.Count;
-        var kind = new short[n]; var ts = new DateTime[n]; var value = new decimal[n]; var seq = new long[n];
-        for (var i = 0; i < n; i++) { kind[i] = (short) rows[i].Kind; ts[i] = rows[i].Ts.UtcDateTime; value[i] = rows[i].Value; seq[i] = rows[i].Seq; }
+        var kind = new short[n];
+        var ts = new DateTime[n];
+        var value = new decimal[n];
+        var seq = new long[n];
+        for (var i = 0; i < n; i++)
+        {
+            kind[i] = (short) rows[i].Kind;
+            ts[i] = rows[i].Ts.UtcDateTime;
+            value[i] = rows[i].Value;
+            seq[i] = rows[i].Seq;
+        }
 
         const string sql = """
             INSERT INTO telemetry.ring_sample (principal_id, device_id, kind, ts, value, seq)
@@ -112,8 +130,19 @@ public sealed class RingIngestService(NpgsqlDataSource db, PartitionManager part
     private static async Task<int> InsertSummariesAsync(NpgsqlConnection conn, NpgsqlTransaction tx, Guid pid, Guid did, List<DeviceSummaryRow> rows, CancellationToken ct)
     {
         var n = rows.Count;
-        var kind = new short[n]; var ps = new DateTime[n]; var pe = new DateTime[n]; var payload = new string[n]; var seq = new long[n];
-        for (var i = 0; i < n; i++) { kind[i] = rows[i].Kind; ps[i] = rows[i].PeriodStart.UtcDateTime; pe[i] = rows[i].PeriodEnd.UtcDateTime; payload[i] = rows[i].PayloadJson; seq[i] = rows[i].Seq; }
+        var kind = new short[n];
+        var ps = new DateTime[n];
+        var pe = new DateTime[n];
+        var payload = new string[n];
+        var seq = new long[n];
+        for (var i = 0; i < n; i++)
+        {
+            kind[i] = rows[i].Kind;
+            ps[i] = rows[i].PeriodStart.UtcDateTime;
+            pe[i] = rows[i].PeriodEnd.UtcDateTime;
+            payload[i] = rows[i].PayloadJson;
+            seq[i] = rows[i].Seq;
+        }
 
         const string sql = """
             INSERT INTO telemetry.device_summary (principal_id, device_id, kind, period_start, period_end, payload, seq)
@@ -151,7 +180,14 @@ public sealed class RingIngestService(NpgsqlDataSource db, PartitionManager part
     private static (RingSampleRow? Row, string? Reason, long? Seq) ParseSample(string line, DateTimeOffset maxFuture, DateTimeOffset minPast)
     {
         JsonDocument doc;
-        try { doc = JsonDocument.Parse(line); } catch { return (null, "invalid_json", null); }
+        try
+        {
+            doc = JsonDocument.Parse(line);
+        }
+        catch
+        {
+            return (null, "invalid_json", null);
+        }
 
         using (doc)
         {
@@ -171,7 +207,14 @@ public sealed class RingIngestService(NpgsqlDataSource db, PartitionManager part
     private static (DeviceSummaryRow? Row, string? Reason, long? Seq) ParseSummary(string line, DateTimeOffset maxFuture, DateTimeOffset minPast)
     {
         JsonDocument doc;
-        try { doc = JsonDocument.Parse(line); } catch { return (null, "invalid_json", null); }
+        try
+        {
+            doc = JsonDocument.Parse(line);
+        }
+        catch
+        {
+            return (null, "invalid_json", null);
+        }
 
         using (doc)
         {
