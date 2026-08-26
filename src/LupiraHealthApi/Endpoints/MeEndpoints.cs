@@ -11,12 +11,14 @@ public static class MeEndpoints
         app.MapGet("/me", (MeHandler h, CancellationToken ct) => h.GetAsync(ct))
             .RequireAuthorization("ApiPolicy").WithTags("Me")
             .WithSummary("The caller's resolved local identity (JIT-provisioned on first login).")
-            .Produces<MeDto>(StatusCodes.Status200OK).Produces(StatusCodes.Status401Unauthorized);
+            .Produces<MeDto>(StatusCodes.Status200OK).Produces(StatusCodes.Status401Unauthorized)
+            .WithName("WhoAmI");
 
         app.MapPost("/me/bootstrap", (MeHandler h, CancellationToken ct) => h.BootstrapAsync(ct))
             .RequireAuthorization("ApiPolicy").WithTags("Me")
             .WithSummary("Idempotently ensure the caller has a personal health record; returns it.")
-            .Produces<HealthRecordDto>(StatusCodes.Status200OK).Produces(StatusCodes.Status401Unauthorized);
+            .Produces<HealthRecordDto>(StatusCodes.Status200OK).Produces(StatusCodes.Status401Unauthorized)
+            .WithName("BootstrapMe");
         return app;
     }
 }

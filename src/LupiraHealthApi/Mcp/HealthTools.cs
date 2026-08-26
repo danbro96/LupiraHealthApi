@@ -1,7 +1,7 @@
 using System.ComponentModel;
+using LupiraHealthApi.Auth;
 using LupiraHealthApi.Core.Application;
 using LupiraHealthApi.Core.Application.Telemetry;
-using LupiraHealthApi.Auth;
 using LupiraHealthApi.Core.Domain.Telemetry;
 using LupiraHealthApi.Core.Dtos.Devices;
 using LupiraHealthApi.Core.Dtos.Me;

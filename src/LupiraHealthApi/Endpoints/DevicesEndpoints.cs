@@ -11,19 +11,23 @@ public static class DevicesEndpoints
 
         g.MapGet("/", (Guid recordId, DevicesHandler h, CancellationToken ct) => h.ListAsync(recordId, ct))
             .WithSummary("List the devices registered to a health record.")
-            .Produces<List<DeviceDto>>(StatusCodes.Status200OK).ProducesProblem(StatusCodes.Status403Forbidden);
+            .Produces<List<DeviceDto>>(StatusCodes.Status200OK).ProducesProblem(StatusCodes.Status403Forbidden)
+            .WithName("ListDevices");
 
         g.MapPost("/", (RegisterDeviceRequest body, DevicesHandler h, CancellationToken ct) => h.RegisterAsync(body, ct))
             .WithSummary("Register a device; returns the one-time ingest API key.")
-            .Produces<RegisterDeviceResponse>(StatusCodes.Status200OK).ProducesProblem(StatusCodes.Status400BadRequest).ProducesProblem(StatusCodes.Status403Forbidden);
+            .Produces<RegisterDeviceResponse>(StatusCodes.Status200OK).ProducesProblem(StatusCodes.Status400BadRequest).ProducesProblem(StatusCodes.Status403Forbidden)
+            .WithName("RegisterDevice");
 
         g.MapPut("/{id:guid}", (Guid id, RenameDeviceRequest body, DevicesHandler h, CancellationToken ct) => h.RenameAsync(id, body, ct))
             .WithSummary("Rename a device.")
-            .Produces<DeviceDto>(StatusCodes.Status200OK).Produces(StatusCodes.Status404NotFound).ProducesProblem(StatusCodes.Status400BadRequest).ProducesProblem(StatusCodes.Status403Forbidden);
+            .Produces<DeviceDto>(StatusCodes.Status200OK).Produces(StatusCodes.Status404NotFound).ProducesProblem(StatusCodes.Status400BadRequest).ProducesProblem(StatusCodes.Status403Forbidden)
+            .WithName("RenameDevice");
 
         g.MapDelete("/{id:guid}", (Guid id, DevicesHandler h, CancellationToken ct) => h.RetireAsync(id, ct))
             .WithSummary("Retire a device (revokes its ingest keys).")
-            .Produces(StatusCodes.Status204NoContent).Produces(StatusCodes.Status404NotFound).ProducesProblem(StatusCodes.Status403Forbidden);
+            .Produces(StatusCodes.Status204NoContent).Produces(StatusCodes.Status404NotFound).ProducesProblem(StatusCodes.Status403Forbidden)
+            .WithName("RetireDevice");
         return app;
     }
 }

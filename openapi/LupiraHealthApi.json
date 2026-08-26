@@ -12,6 +12,7 @@
           "Me"
         ],
         "summary": "The caller's resolved local identity (JIT-provisioned on first login).",
+        "operationId": "WhoAmI",
         "responses": {
           "200": {
             "description": "OK",
@@ -57,6 +58,7 @@
           "Me"
         ],
         "summary": "Idempotently ensure the caller has a personal health record; returns it.",
+        "operationId": "BootstrapMe",
         "responses": {
           "200": {
             "description": "OK",
@@ -102,6 +104,7 @@
           "HealthRecords"
         ],
         "summary": "List the health records the caller owns.",
+        "operationId": "ListRecords",
         "responses": {
           "200": {
             "description": "OK",
@@ -148,6 +151,7 @@
           "HealthRecords"
         ],
         "summary": "Create a health record (the caller becomes its owner).",
+        "operationId": "CreateRecord",
         "requestBody": {
           "content": {
             "application/json": {
@@ -203,6 +207,7 @@
           "Devices"
         ],
         "summary": "List the devices registered to a health record.",
+        "operationId": "ListDevices",
         "parameters": [
           {
             "name": "recordId",
@@ -270,6 +275,7 @@
           "Devices"
         ],
         "summary": "Register a device; returns the one-time ingest API key.",
+        "operationId": "RegisterDevice",
         "requestBody": {
           "content": {
             "application/json": {
@@ -345,6 +351,7 @@
           "Devices"
         ],
         "summary": "Rename a device.",
+        "operationId": "RenameDevice",
         "parameters": [
           {
             "name": "id",
@@ -439,6 +446,7 @@
           "Devices"
         ],
         "summary": "Retire a device (revokes its ingest keys).",
+        "operationId": "RetireDevice",
         "parameters": [
           {
             "name": "id",
@@ -508,6 +516,7 @@
           "Ingest"
         ],
         "summary": "Ingest a batch of ring point-samples (NDJSON).",
+        "operationId": "IngestRingSamples",
         "requestBody": {
           "content": {
             "application/x-ndjson": {
@@ -563,6 +572,7 @@
           "Ingest"
         ],
         "summary": "Ingest a batch of device-computed summaries (NDJSON).",
+        "operationId": "IngestSummaries",
         "requestBody": {
           "content": {
             "application/x-ndjson": {
@@ -618,6 +628,7 @@
           "Ring"
         ],
         "summary": "Downsampled ring metric (avg/min/max/count per bucket).",
+        "operationId": "ReadVitals",
         "parameters": [
           {
             "name": "kind",
@@ -718,6 +729,7 @@
           "Ring"
         ],
         "summary": "Device-computed summaries (sleep sessions, daily totals…).",
+        "operationId": "ReadSummaries",
         "parameters": [
           {
             "name": "from",

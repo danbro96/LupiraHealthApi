@@ -13,10 +13,12 @@ public static class IngestEndpoints
 
         g.MapPost("/ring", (RingIngestHandler h, CancellationToken ct) => h.SamplesAsync(ct))
             .WithSummary("Ingest a batch of ring point-samples (NDJSON).")
-            .Accepts<string>("application/x-ndjson").Produces<RingIngestReceipt>(StatusCodes.Status202Accepted);
+            .Accepts<string>("application/x-ndjson").Produces<RingIngestReceipt>(StatusCodes.Status202Accepted)
+            .WithName("IngestRingSamples");
         g.MapPost("/summaries", (RingIngestHandler h, CancellationToken ct) => h.SummariesAsync(ct))
             .WithSummary("Ingest a batch of device-computed summaries (NDJSON).")
-            .Accepts<string>("application/x-ndjson").Produces<RingIngestReceipt>(StatusCodes.Status202Accepted);
+            .Accepts<string>("application/x-ndjson").Produces<RingIngestReceipt>(StatusCodes.Status202Accepted)
+            .WithName("IngestSummaries");
         return app;
     }
 }

@@ -11,11 +11,13 @@ public static class HealthRecordsEndpoints
 
         g.MapGet("/", (HealthRecordsHandler h, CancellationToken ct) => h.ListAsync(ct))
             .WithSummary("List the health records the caller owns.")
-            .Produces<List<HealthRecordDto>>(StatusCodes.Status200OK);
+            .Produces<List<HealthRecordDto>>(StatusCodes.Status200OK)
+            .WithName("ListRecords");
 
         g.MapPost("/", (CreateHealthRecordRequest body, HealthRecordsHandler h, CancellationToken ct) => h.CreateAsync(body, ct))
             .WithSummary("Create a health record (the caller becomes its owner).")
-            .Produces<HealthRecordDto>(StatusCodes.Status200OK);
+            .Produces<HealthRecordDto>(StatusCodes.Status200OK)
+            .WithName("CreateRecord");
         return app;
     }
 }
