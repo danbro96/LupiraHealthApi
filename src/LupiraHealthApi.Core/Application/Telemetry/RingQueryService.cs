@@ -1,9 +1,9 @@
-using LupiraHealthApi.Domain.Telemetry;
-using LupiraHealthApi.Dtos.Ring;
+using LupiraHealthApi.Core.Domain.Telemetry;
+using LupiraHealthApi.Core.Dtos.Ring;
 using Npgsql;
 using NpgsqlTypes;
 
-namespace LupiraHealthApi.Application.Telemetry;
+namespace LupiraHealthApi.Core.Application.Telemetry;
 
 /// <summary>Read API over a principal's own ring telemetry. Downsampling is computed on read via <c>date_bin</c> (no
 /// extension). Every query hard-filters <c>principal_id = caller</c>.</summary>

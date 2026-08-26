@@ -1,8 +1,8 @@
-using LupiraHealthApi.Domain;
-using LupiraHealthApi.Dtos.Records;
+using LupiraHealthApi.Core.Domain;
+using LupiraHealthApi.Core.Dtos.Records;
 using Marten;
 
-namespace LupiraHealthApi.Application;
+namespace LupiraHealthApi.Core.Application;
 
 /// <summary>Lists and creates the health-record containers a principal owns. Phase 1 has no sharing — a record belongs
 /// solely to its creator. (Co-owner grant/revoke is deferred to phase 2.)</summary>

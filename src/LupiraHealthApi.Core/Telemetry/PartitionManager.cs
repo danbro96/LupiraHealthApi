@@ -1,6 +1,6 @@
 using Npgsql;
 
-namespace LupiraHealthApi.Telemetry;
+namespace LupiraHealthApi.Core.Telemetry;
 
 public enum PartitionInterval { Weekly, Monthly }
 

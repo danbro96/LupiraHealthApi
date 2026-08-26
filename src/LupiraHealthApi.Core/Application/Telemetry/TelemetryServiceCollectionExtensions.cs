@@ -1,5 +1,5 @@
-using LupiraHealthApi.Application.Telemetry;
-using LupiraHealthApi.Telemetry;
+using LupiraHealthApi.Core.Application.Telemetry;
+using LupiraHealthApi.Core.Telemetry;
 
 namespace Microsoft.Extensions.DependencyInjection;
 

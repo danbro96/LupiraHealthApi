@@ -1,10 +1,10 @@
-using LupiraHealthApi.Auth;
-using LupiraHealthApi.Domain;
-using LupiraHealthApi.Dtos.Devices;
-using LupiraHealthApi.Mappers;
+using LupiraHealthApi.Core.Auth;
+using LupiraHealthApi.Core.Domain;
+using LupiraHealthApi.Core.Dtos.Devices;
+using LupiraHealthApi.Core.Mappers;
 using Marten;
 
-namespace LupiraHealthApi.Application;
+namespace LupiraHealthApi.Core.Application;
 
 /// <summary>Registers and manages devices on a health record (plain-doc CRUD). Registration mints a per-device ingest
 /// API key (the plaintext is returned once); retiring a device revokes its keys. All operations are gated on the

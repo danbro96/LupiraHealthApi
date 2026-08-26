@@ -1,6 +1,6 @@
-using LupiraHealthApi.Application.Telemetry;
-using LupiraHealthApi.Domain;
-using LupiraHealthApi.Domain.Telemetry;
+using LupiraHealthApi.Core.Application.Telemetry;
+using LupiraHealthApi.Core.Domain;
+using LupiraHealthApi.Core.Domain.Telemetry;
 using Xunit;
 
 namespace LupiraHealthApi.UnitTests;

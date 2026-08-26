@@ -1,6 +1,6 @@
-using LupiraHealthApi.Domain;
+using LupiraHealthApi.Core.Domain;
 
-namespace LupiraHealthApi.Dtos.Devices;
+namespace LupiraHealthApi.Core.Dtos.Devices;
 
 /// <summary>Register a device against a health record. <c>Kind</c> is a <c>DeviceKind</c> name (case-insensitive).</summary>
 public sealed class RegisterDeviceRequest

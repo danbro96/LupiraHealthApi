@@ -1,4 +1,4 @@
-using LupiraHealthApi.Dtos.Records;
+using LupiraHealthApi.Core.Dtos.Records;
 using System.Net.Http.Json;
 using System.Net;
 using Xunit;

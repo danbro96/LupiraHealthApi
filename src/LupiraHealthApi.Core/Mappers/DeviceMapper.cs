@@ -1,7 +1,7 @@
-using LupiraHealthApi.Domain;
-using LupiraHealthApi.Dtos.Devices;
+using LupiraHealthApi.Core.Domain;
+using LupiraHealthApi.Core.Dtos.Devices;
 
-namespace LupiraHealthApi.Mappers;
+namespace LupiraHealthApi.Core.Mappers;
 
 internal static class DeviceMapper
 {

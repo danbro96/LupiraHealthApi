@@ -1,4 +1,4 @@
-using LupiraHealthApi.Dtos.Ring;
+using LupiraHealthApi.Core.Dtos.Ring;
 using LupiraHealthApi.Handlers;
 
 namespace LupiraHealthApi.Endpoints;

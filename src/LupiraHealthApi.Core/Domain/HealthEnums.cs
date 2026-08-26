@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace LupiraHealthApi.Domain;
+namespace LupiraHealthApi.Core.Domain;
 
 /// <summary>Kind of registered device that may feed this health record.</summary>
 [JsonConverter(typeof(JsonStringEnumConverter<DeviceKind>))]

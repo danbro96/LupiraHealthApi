@@ -1,4 +1,4 @@
-namespace LupiraHealthApi.Domain;
+namespace LupiraHealthApi.Core.Domain;
 
 /// <summary>A health record — the per-principal container all health data belongs to (plain document, not versioned).
 /// Phase 1: a record is owned solely by its creating principal (<see cref="OwnerPrincipalId"/>); there is no sharing.

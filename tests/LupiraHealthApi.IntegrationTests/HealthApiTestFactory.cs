@@ -1,4 +1,4 @@
-using LupiraHealthApi.Telemetry;
+using LupiraHealthApi.Core.Telemetry;
 using Marten;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;

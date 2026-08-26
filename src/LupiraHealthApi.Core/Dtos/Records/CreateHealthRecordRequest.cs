@@ -1,4 +1,4 @@
-namespace LupiraHealthApi.Dtos.Records;
+namespace LupiraHealthApi.Core.Dtos.Records;
 
 /// <summary>Create a health record. The caller is granted <c>owner</c>.</summary>
 public sealed class CreateHealthRecordRequest

@@ -1,7 +1,7 @@
-using LupiraHealthApi.Application;
+using LupiraHealthApi.Core.Application;
 using LupiraHealthApi.Auth;
-using LupiraHealthApi.Dtos.Me;
-using LupiraHealthApi.Dtos.Records;
+using LupiraHealthApi.Core.Dtos.Me;
+using LupiraHealthApi.Core.Dtos.Records;
 using LupiraHealthApi.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 

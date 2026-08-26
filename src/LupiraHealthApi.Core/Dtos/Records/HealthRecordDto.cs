@@ -1,4 +1,4 @@
-namespace LupiraHealthApi.Dtos.Records;
+namespace LupiraHealthApi.Core.Dtos.Records;
 
 /// <summary>A health record owned by the caller.</summary>
 public sealed class HealthRecordDto

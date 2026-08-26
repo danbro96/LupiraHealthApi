@@ -1,9 +1,9 @@
 using Marten;
-using LupiraHealthApi.Domain;
-using LupiraHealthApi.Dtos.Devices;
-using LupiraHealthApi.Dtos.Me;
-using LupiraHealthApi.Dtos.Records;
-using LupiraHealthApi.Dtos.Ring;
+using LupiraHealthApi.Core.Domain;
+using LupiraHealthApi.Core.Dtos.Devices;
+using LupiraHealthApi.Core.Dtos.Me;
+using LupiraHealthApi.Core.Dtos.Records;
+using LupiraHealthApi.Core.Dtos.Ring;
 using System.Globalization;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;

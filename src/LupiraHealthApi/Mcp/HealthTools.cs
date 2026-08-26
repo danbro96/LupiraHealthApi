@@ -1,12 +1,12 @@
 using System.ComponentModel;
-using LupiraHealthApi.Application;
-using LupiraHealthApi.Application.Telemetry;
+using LupiraHealthApi.Core.Application;
+using LupiraHealthApi.Core.Application.Telemetry;
 using LupiraHealthApi.Auth;
-using LupiraHealthApi.Domain.Telemetry;
-using LupiraHealthApi.Dtos.Devices;
-using LupiraHealthApi.Dtos.Me;
-using LupiraHealthApi.Dtos.Records;
-using LupiraHealthApi.Dtos.Ring;
+using LupiraHealthApi.Core.Domain.Telemetry;
+using LupiraHealthApi.Core.Dtos.Devices;
+using LupiraHealthApi.Core.Dtos.Me;
+using LupiraHealthApi.Core.Dtos.Records;
+using LupiraHealthApi.Core.Dtos.Ring;
 using ModelContextProtocol;
 using ModelContextProtocol.Server;
 

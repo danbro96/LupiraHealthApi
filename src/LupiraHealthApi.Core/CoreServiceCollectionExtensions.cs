@@ -1,6 +1,6 @@
-using LupiraHealthApi.Application;
-using LupiraHealthApi.Auth;
-using LupiraHealthApi.Data;
+using LupiraHealthApi.Core.Application;
+using LupiraHealthApi.Core.Auth;
+using LupiraHealthApi.Core.Data;
 using Marten;
 using Microsoft.Extensions.Configuration;
 using Npgsql;

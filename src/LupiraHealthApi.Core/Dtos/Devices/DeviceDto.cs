@@ -1,6 +1,6 @@
-using LupiraHealthApi.Domain;
+using LupiraHealthApi.Core.Domain;
 
-namespace LupiraHealthApi.Dtos.Devices;
+namespace LupiraHealthApi.Core.Dtos.Devices;
 
 /// <summary>A registered device.</summary>
 public sealed class DeviceDto

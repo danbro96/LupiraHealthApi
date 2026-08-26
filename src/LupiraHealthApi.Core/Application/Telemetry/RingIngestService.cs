@@ -1,12 +1,12 @@
 using System.Globalization;
 using System.Text.Json;
-using LupiraHealthApi.Domain.Telemetry;
-using LupiraHealthApi.Dtos.Ring;
-using LupiraHealthApi.Telemetry;
+using LupiraHealthApi.Core.Domain.Telemetry;
+using LupiraHealthApi.Core.Dtos.Ring;
+using LupiraHealthApi.Core.Telemetry;
 using Npgsql;
 using NpgsqlTypes;
 
-namespace LupiraHealthApi.Application.Telemetry;
+namespace LupiraHealthApi.Core.Application.Telemetry;
 
 /// <summary>Ingests batched ring point-samples and device-computed summaries (NDJSON). Idempotent merge:
 /// device-assigned <c>seq</c> in the PK + <c>ON CONFLICT DO NOTHING</c>, monthly partitions pre-created on

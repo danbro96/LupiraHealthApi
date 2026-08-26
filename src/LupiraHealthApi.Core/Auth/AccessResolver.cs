@@ -1,7 +1,7 @@
-using LupiraHealthApi.Domain;
+using LupiraHealthApi.Core.Domain;
 using Marten;
 
-namespace LupiraHealthApi.Auth;
+namespace LupiraHealthApi.Core.Auth;
 
 /// <summary>Ownership check over health records. Phase 1 has no sharing: a principal may read and write only the
 /// records it owns. Every child resource carries the record id and inherits this check.</summary>

@@ -1,4 +1,4 @@
-using LupiraHealthApi.Telemetry;
+using LupiraHealthApi.Core.Telemetry;
 using Xunit;
 
 namespace LupiraHealthApi.UnitTests;

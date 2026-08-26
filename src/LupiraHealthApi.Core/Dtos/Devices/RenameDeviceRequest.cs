@@ -1,4 +1,4 @@
-namespace LupiraHealthApi.Dtos.Devices;
+namespace LupiraHealthApi.Core.Dtos.Devices;
 
 /// <summary>Rename a device.</summary>
 public sealed class RenameDeviceRequest

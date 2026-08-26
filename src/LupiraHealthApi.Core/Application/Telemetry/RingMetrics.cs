@@ -1,6 +1,6 @@
-using LupiraHealthApi.Domain.Telemetry;
+using LupiraHealthApi.Core.Domain.Telemetry;
 
-namespace LupiraHealthApi.Application.Telemetry;
+namespace LupiraHealthApi.Core.Application.Telemetry;
 
 /// <summary>Maps wire metric names (and aliases the mobile app sends) to <see cref="RingMetric"/>.</summary>
 public static class RingMetrics

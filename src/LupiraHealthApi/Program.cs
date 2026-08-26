@@ -1,11 +1,11 @@
 using System.Text.Json.Serialization;
 using LupiraHealthApi.Auth;
 using LupiraHealthApi.Background;
-using LupiraHealthApi.Domain;
+using LupiraHealthApi.Core.Domain;
 using LupiraHealthApi.Endpoints;
 using LupiraHealthApi.Handlers;
 using LupiraHealthApi.Health;
-using LupiraHealthApi.Telemetry;
+using LupiraHealthApi.Core.Telemetry;
 using Marten;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

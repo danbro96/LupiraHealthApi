@@ -1,7 +1,7 @@
-using LupiraHealthApi.Domain.Identity;
-using LupiraHealthApi.Domain;
-using LupiraHealthApi.Dtos.Devices;
-using LupiraHealthApi.Dtos.Ring;
+using LupiraHealthApi.Core.Domain.Identity;
+using LupiraHealthApi.Core.Domain;
+using LupiraHealthApi.Core.Dtos.Devices;
+using LupiraHealthApi.Core.Dtos.Ring;
 using System.Net.Http.Json;
 using System.Net;
 using Xunit;

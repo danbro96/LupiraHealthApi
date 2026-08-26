@@ -1,5 +1,5 @@
-using LupiraHealthApi.Domain;
-using LupiraHealthApi.Dtos.Devices;
+using LupiraHealthApi.Core.Domain;
+using LupiraHealthApi.Core.Dtos.Devices;
 using System.Net.Http.Json;
 using System.Net;
 using System.Text;

@@ -1,8 +1,8 @@
-using LupiraHealthApi.Domain.Identity;
+using LupiraHealthApi.Core.Domain.Identity;
 using Marten;
 using Npgsql;
 
-namespace LupiraHealthApi.Application;
+namespace LupiraHealthApi.Core.Application;
 
 /// <summary>
 /// Resolves an authenticated principal (OIDC <c>sub</c> + email) to a local <see cref="Principal"/>,

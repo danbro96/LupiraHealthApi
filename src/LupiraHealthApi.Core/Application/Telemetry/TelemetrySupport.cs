@@ -1,6 +1,6 @@
 using Npgsql;
 
-namespace LupiraHealthApi.Application.Telemetry;
+namespace LupiraHealthApi.Core.Application.Telemetry;
 
 /// <summary>Small null-aware readers over the raw telemetry result sets (real columns come back as <c>float</c>,
 /// smallints as <c>short</c> — normalize them to the DTO shapes).</summary>
