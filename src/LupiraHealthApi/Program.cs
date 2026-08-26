@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 using LupiraHealthApi.Auth;
-using LupiraHealthApi.Background;
+using LupiraHealthApi.Workers;
 using LupiraHealthApi.Core.Domain;
 using LupiraHealthApi.Endpoints;
 using LupiraHealthApi.Handlers;

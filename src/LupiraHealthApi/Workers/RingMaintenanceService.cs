@@ -1,7 +1,7 @@
 using LupiraHealthApi.Core.Telemetry;
 using Npgsql;
 
-namespace LupiraHealthApi.Background;
+namespace LupiraHealthApi.Workers;
 
 /// <summary>Periodic maintenance for the ring telemetry store: pre-provision upcoming monthly partitions for
 /// <c>ring_sample</c> + <c>device_summary</c> so ingest never blocks on DDL. Gated by
