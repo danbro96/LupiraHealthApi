@@ -24,7 +24,10 @@ namespace LupiraHealthApi.Mcp;
 public sealed class HealthTools(CurrentUser user, HealthRecordService records, DeviceService devices, RingQueryService ring)
 {
     [McpServerTool(Name = "whoami")]
-    [Description("Resolve the calling user's identity in this service (id, email, display name).")]
+    [Description("Resolve who the caller is in this service, returning their local id, email and display name. " +
+        "The id is the key every other tool here scopes to, so call this first when you need to reason about " +
+        "ownership or correlate with another Lupira service. Identity is taken from the bearer principal and " +
+        "provisioned on first use, so this succeeds even for a caller with no health data yet.")]
     public async Task<MeDto> WhoAmI(CancellationToken ct = default)
     {
         var me = await user.GetAsync(ct);
@@ -32,7 +35,10 @@ public sealed class HealthTools(CurrentUser user, HealthRecordService records, D
     }
 
     [McpServerTool(Name = "list_health_records")]
-    [Description("List the health records the current user owns.")]
+    [Description("List the health records the caller owns. A record is the container that devices feed and that " +
+        "vitals and summaries hang off, so this is the starting point for finding the record id other tools take. " +
+        "Returns every record with no filter. It does not return the devices or the readings themselves — use " +
+        "list_devices, read_vitals and read_summaries for those.")]
     public async Task<List<HealthRecordDto>> ListHealthRecords(CancellationToken ct = default)
     {
         var me = await user.GetAsync(ct);
@@ -40,7 +46,10 @@ public sealed class HealthTools(CurrentUser user, HealthRecordService records, D
     }
 
     [McpServerTool(Name = "list_devices")]
-    [Description("List devices (rings, watches, scales…) feeding the current user's health records.")]
+    [Description("List the devices — rings, watches, scales and the like — that feed the caller's health records. " +
+        "Pass a record id to see just that record's devices; omit it and the results are aggregated across every " +
+        "record the caller owns, which is usually what you want when answering 'what is tracking me'. Use the " +
+        "device ids returned here to narrow read_vitals or read_summaries to one device.")]
     public async Task<List<DeviceDto>> ListDevices(
         [Description("Restrict to one health record. Omit to aggregate devices across all your records.")] Guid? recordId = null,
         CancellationToken ct = default)
@@ -56,7 +65,11 @@ public sealed class HealthTools(CurrentUser user, HealthRecordService records, D
     }
 
     [McpServerTool(Name = "read_vitals")]
-    [Description("Read a downsampled ring vital over a time range as avg/min/max/count buckets.")]
+    [Description("Read one ring vital over a time range, downsampled into fixed-width buckets that each carry " +
+        "avg, min, max and a sample count. Choosing the metric is required; the range defaults to the last 24 " +
+        "hours and buckets to 60 seconds, so widen the bucket when asking about days or weeks or the result set " +
+        "gets large. Readings from every device are included unless you narrow to one. Because it returns buckets " +
+        "rather than raw samples, it answers trends and ranges — not the exact value at an instant.")]
     public async Task<List<RingBucketDto>> ReadVitals(
         [Description("Which vital to read: HeartRate, Hrv, Spo2, SkinTemp, Steps, or Activity.")] RingMetric metric,
         [Description("Range start (ISO-8601). Defaults to 24h before 'to'.")] DateTimeOffset? from = null,
@@ -75,7 +88,11 @@ public sealed class HealthTools(CurrentUser user, HealthRecordService records, D
     }
 
     [McpServerTool(Name = "read_summaries")]
-    [Description("Read device-computed summaries (sleep sessions, daily totals…) over a time range; each carries a raw JSON payload.")]
+    [Description("Read the summaries the devices computed themselves — sleep sessions, daily totals and similar — " +
+        "over a time range, defaulting to the last 30 days. These are the device's own conclusions rather than " +
+        "anything derived here, and each carries its raw JSON payload, so read that for fields this API does not " +
+        "model. Kind is the device-assigned smallint, so discover the kinds in use by calling without it first. " +
+        "For continuous measurements rather than device conclusions, use read_vitals.")]
     public async Task<List<DeviceSummaryDto>> ReadSummaries(
         [Description("Range start (ISO-8601). Defaults to 30 days before 'to'.")] DateTimeOffset? from = null,
         [Description("Range end (ISO-8601). Defaults to now.")] DateTimeOffset? to = null,
