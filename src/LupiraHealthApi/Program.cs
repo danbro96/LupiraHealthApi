@@ -8,6 +8,7 @@ using LupiraHealthApi.Endpoints;
 using LupiraHealthApi.Handlers;
 using LupiraHealthApi.Health;
 using LupiraHealthApi.Http;
+using LupiraHealthApi.Mcp;
 using LupiraHealthApi.Workers;
 using Marten;
 using Microsoft.AspNetCore.Authentication;
@@ -41,6 +42,7 @@ builder.Services.AddScoped<RingQueryHandler>();
 builder.Services
     .AddMcpServer()
     .WithHttpTransport()
+    .WithRequestFilters(f => f.AddCallToolFilter(StrictToolArguments.Filter))
     .WithToolsFromAssembly();
 
 // Background maintenance: pre-provision upcoming ring partitions (gated by config).
