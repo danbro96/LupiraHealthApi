@@ -1,7 +1,7 @@
 using System.ComponentModel;
+using Lupira.Mcp;
 using LupiraHealthApi.Auth;
 using LupiraHealthApi.Core.Application;
-using LupiraHealthApi.Core.Application.Results;
 using LupiraHealthApi.Core.Application.Telemetry;
 using LupiraHealthApi.Core.Domain.Telemetry;
 using LupiraHealthApi.Core.Dtos.Devices;
@@ -42,7 +42,7 @@ public sealed class HealthTools(CurrentUser user, HealthRecordService records, D
     public async Task<List<HealthRecordDto>> ListHealthRecords(CancellationToken ct = default)
     {
         var me = await user.GetAsync(ct);
-        return Require(await records.ListAsync(me.Id, ct));
+        return (await records.ListAsync(me.Id, ct)).Require();
     }
 
     [McpServerTool(Name = "list_devices")]
@@ -56,11 +56,11 @@ public sealed class HealthTools(CurrentUser user, HealthRecordService records, D
     {
         var me = await user.GetAsync(ct);
         if (recordId is { } rid)
-            return Require(await devices.ListAsync(me.Id, rid, ct));
+            return (await devices.ListAsync(me.Id, rid, ct)).Require();
 
         var all = new List<DeviceDto>();
-        foreach (var record in Require(await records.ListAsync(me.Id, ct)))
-            all.AddRange(Require(await devices.ListAsync(me.Id, record.Id, ct)));
+        foreach (var record in (await records.ListAsync(me.Id, ct)).Require())
+            all.AddRange((await devices.ListAsync(me.Id, record.Id, ct)).Require());
         return all;
     }
 
@@ -84,7 +84,7 @@ public sealed class HealthTools(CurrentUser user, HealthRecordService records, D
         var t = to ?? DateTimeOffset.UtcNow;
         var f = from ?? t.AddDays(-1);
         var bucket = TimeSpan.FromSeconds(bucketSeconds is > 0 ? bucketSeconds.Value : 60);
-        return Require(await ring.DownsampleAsync(me.Id, deviceId, metric, f, t, bucket, ct));
+        return (await ring.DownsampleAsync(me.Id, deviceId, metric, f, t, bucket, ct)).Require();
     }
 
     [McpServerTool(Name = "read_summaries")]
@@ -103,17 +103,6 @@ public sealed class HealthTools(CurrentUser user, HealthRecordService records, D
         var me = await user.GetAsync(ct);
         var t = to ?? DateTimeOffset.UtcNow;
         var f = from ?? t.AddDays(-30);
-        return Require(await ring.SummariesAsync(me.Id, deviceId, (short?) kind, f, t, ct));
+        return (await ring.SummariesAsync(me.Id, deviceId, (short?) kind, f, t, ct)).Require();
     }
-
-    /// <summary>Unwraps a service outcome or surfaces it to the agent as an <see cref="McpException"/>.</summary>
-    private static T Require<T>(OpResult<T> r) => r.Status switch
-    {
-        OpStatus.Ok => r.Value!,
-        OpStatus.NotFound => throw new McpException("Not found, or you don't have access to it."),
-        OpStatus.Forbidden => throw new McpException(r.Error ?? "You don't have permission to do that."),
-        OpStatus.Invalid => throw new McpException(r.Error ?? "The request was invalid."),
-        OpStatus.Conflict => throw new McpException(r.Error ?? "Conflict."),
-        _ => throw new McpException("Unexpected error."),
-    };
 }

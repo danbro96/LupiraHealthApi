@@ -32,7 +32,7 @@ authenticates humans with OIDC and devices with per-device API keys.
 | Time-series | Raw Npgsql, native range-partitioned tables (schema `telemetry`) |
 | Auth | JWT bearer (OIDC) for users · per-device API key for ingest |
 | API docs | `Microsoft.AspNetCore.OpenApi` 10.0 + Scalar 2.16 |
-| Observability | OpenTelemetry 1.16 (OTLP exporter, env-gated) |
+| Observability | OpenTelemetry via `Lupira.Hosting.Observability` (OTLP; endpoint required outside Development) |
 | Tests | xUnit + Testcontainers (ephemeral Postgres) |
 
 ## Run locally

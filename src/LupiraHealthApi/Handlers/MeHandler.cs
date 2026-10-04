@@ -1,8 +1,8 @@
+using Lupira.Hosting.Problems;
 using LupiraHealthApi.Auth;
 using LupiraHealthApi.Core.Application;
 using LupiraHealthApi.Core.Dtos.Me;
 using LupiraHealthApi.Core.Dtos.Records;
-using LupiraHealthApi.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace LupiraHealthApi.Handlers;
