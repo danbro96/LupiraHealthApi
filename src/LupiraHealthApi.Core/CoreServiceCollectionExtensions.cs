@@ -1,3 +1,4 @@
+using Lupira.Identity.Marten;
 using LupiraHealthApi.Core.Application;
 using LupiraHealthApi.Core.Auth;
 using LupiraHealthApi.Core.Data;
@@ -37,7 +38,7 @@ public static class CoreServiceCollectionExtensions
         });
 
         services.AddScoped<AccessResolver>();
-        services.AddScoped<PrincipalDirectory>();
+        services.AddLupiraPrincipalDirectory();
         services.AddScoped<HealthRecordService>();
         services.AddScoped<DeviceService>();
 

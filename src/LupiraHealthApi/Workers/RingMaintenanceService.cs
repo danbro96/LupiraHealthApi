@@ -1,4 +1,4 @@
-using LupiraHealthApi.Core.Telemetry;
+using Lupira.Postgres.Partitions;
 using Npgsql;
 
 namespace LupiraHealthApi.Workers;

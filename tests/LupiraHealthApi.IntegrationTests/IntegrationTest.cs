@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
+using Lupira.Testing.Postgres;
 using LupiraHealthApi.Core.Domain;
 using LupiraHealthApi.Core.Dtos.Devices;
 using LupiraHealthApi.Core.Dtos.Me;

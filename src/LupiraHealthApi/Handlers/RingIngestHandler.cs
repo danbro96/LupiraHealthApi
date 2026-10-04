@@ -1,4 +1,4 @@
-using LupiraHealthApi.Auth;
+using Lupira.Auth.DeviceKeys;
 using LupiraHealthApi.Core.Application.Telemetry;
 using LupiraHealthApi.Core.Dtos.Ring;
 using Microsoft.AspNetCore.Http.HttpResults;

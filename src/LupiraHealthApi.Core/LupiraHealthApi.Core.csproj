@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Expose internal helpers (Geo, PartitionManager.Bounds) for unit testing. -->
+    <!-- Expose internal helpers (Geo) for unit testing. -->
     <InternalsVisibleTo Include="LupiraHealthApi.UnitTests" />
   </ItemGroup>
 
@@ -20,6 +20,10 @@
          Mappers, Auth/AccessResolver+ConsentResolver. Marten is the event store + document store on the
          `health` schema; the `telemetry` schema is raw partitioned tables written via Npgsql (which flows
          in transitively from Marten). No ASP.NET dependency — that lives in the host. -->
+    <PackageReference Include="Lupira.Auth.DeviceKeys" Version="1.0.0" />
+    <PackageReference Include="Lupira.Identity.Marten" Version="0.1.0" />
+    <PackageReference Include="Lupira.Postgres.Health" Version="0.1.0" />
+    <PackageReference Include="Lupira.Postgres.Partitions" Version="1.0.0" />
     <PackageReference Include="Lupira.Results" Version="1.0.0" />
     <PackageReference Include="Marten" Version="9.40.0" />
   </ItemGroup>

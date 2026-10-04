@@ -1,9 +1,9 @@
 using System.Globalization;
 using System.Text.Json;
+using Lupira.Postgres.Partitions;
 using Lupira.Results;
 using LupiraHealthApi.Core.Domain.Telemetry;
 using LupiraHealthApi.Core.Dtos.Ring;
-using LupiraHealthApi.Core.Telemetry;
 using Npgsql;
 using NpgsqlTypes;
 

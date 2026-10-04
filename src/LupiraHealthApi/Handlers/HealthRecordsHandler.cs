@@ -1,5 +1,5 @@
 using Lupira.Hosting.Problems;
-using LupiraHealthApi.Auth;
+using Lupira.Identity.Marten.AspNetCore;
 using LupiraHealthApi.Core.Application;
 using LupiraHealthApi.Core.Dtos.Records;
 using Microsoft.AspNetCore.Http.HttpResults;

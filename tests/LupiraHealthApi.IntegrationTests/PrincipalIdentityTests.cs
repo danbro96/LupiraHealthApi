@@ -1,6 +1,5 @@
-using LupiraHealthApi.Core.Application;
+using Lupira.Identity.Marten;
 using LupiraHealthApi.Core.Domain;
-using LupiraHealthApi.Core.Domain.Identity;
 using Marten;
 using Xunit;
 

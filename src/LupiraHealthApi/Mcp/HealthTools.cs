@@ -1,6 +1,6 @@
 using System.ComponentModel;
+using Lupira.Identity.Marten.AspNetCore;
 using Lupira.Mcp;
-using LupiraHealthApi.Auth;
 using LupiraHealthApi.Core.Application;
 using LupiraHealthApi.Core.Application.Telemetry;
 using LupiraHealthApi.Core.Domain.Telemetry;

@@ -2,7 +2,7 @@ namespace LupiraHealthApi.Core.Domain;
 
 /// <summary>A registered device that feeds a health record (plain document — pure registration metadata, no clinical
 /// audit value). Telemetry rows carry the <see cref="Id"/> by value; per-device ingest credentials live in
-/// <see cref="DeviceApiKey"/>.</summary>
+/// <see cref="Lupira.Auth.DeviceKeys.DeviceApiKey"/>.</summary>
 public sealed class Device
 {
     public Guid Id { get; set; }

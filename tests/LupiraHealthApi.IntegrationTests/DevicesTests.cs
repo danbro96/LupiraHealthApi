@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text;
+using Lupira.Testing.Postgres;
 using LupiraHealthApi.Core.Domain;
 using LupiraHealthApi.Core.Dtos.Devices;
 using Xunit;

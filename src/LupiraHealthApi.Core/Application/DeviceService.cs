@@ -1,3 +1,4 @@
+using Lupira.Auth.DeviceKeys;
 using Lupira.Results;
 using LupiraHealthApi.Core.Auth;
 using LupiraHealthApi.Core.Domain;

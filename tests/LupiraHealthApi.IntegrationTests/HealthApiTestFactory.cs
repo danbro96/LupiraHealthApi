@@ -1,11 +1,8 @@
+using Lupira.Testing.Postgres;
 using LupiraHealthApi.Core.Telemetry;
 using Marten;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
-using Testcontainers.PostgreSql;
 
 namespace LupiraHealthApi.IntegrationTests;
 
@@ -15,62 +12,26 @@ namespace LupiraHealthApi.IntegrationTests;
 /// Marten <c>health</c> schema and the raw <c>telemetry</c> schema are applied once; data is reset per test. The
 /// background maintenance service is disabled so it never races the reset.
 /// </summary>
-public sealed class HealthApiTestFactory : WebApplicationFactory<Program>
+public sealed class HealthApiTestFactory : LupiraApiFactory<Program>
 {
-    private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder("postgres:17-alpine").Build();
-    private bool _schemaApplied;
-
-    public HealthApiTestFactory() => _postgres.StartAsync().GetAwaiter().GetResult();
-
-    protected override void ConfigureWebHost(IWebHostBuilder builder)
-    {
-        builder.UseEnvironment("Development");
-        builder.ConfigureAppConfiguration(cfg =>
-            cfg.AddInMemoryCollection(new Dictionary<string, string?>
-            {
-                ["ConnectionStrings:Postgres"] = _postgres.GetConnectionString(),
-                ["Telemetry:MaintenanceEnabled"] = "false",
-                // Never contacted (no token is ever validated in tests); only echoed by the RFC 9728 metadata.
-                ["Auth:Oidc:Authority"] = "https://auth.test/application/o/lupira-health/",
-            }));
-    }
-
     public IDocumentStore Store => Services.GetRequiredService<IDocumentStore>();
+
     public NpgsqlDataSource DataSource => Services.GetRequiredService<NpgsqlDataSource>();
 
-    /// <summary>Ensure both schemas exist (once), then wipe all Marten documents/events and all telemetry rows.</summary>
-    public async Task ResetAsync()
+    protected override string AuthentikSlug => "lupira-health";
+
+    protected override void AddSettings(IDictionary<string, string?> settings) =>
+        settings["Telemetry:MaintenanceEnabled"] = "false";
+
+    protected override async Task ApplySchemaAsync()
     {
-        if (!_schemaApplied)
-        {
-            await Store.Storage.ApplyAllConfiguredChangesToDatabaseAsync();
-            await TelemetrySchema.ApplyAsync(DataSource);
-            _schemaApplied = true;
-        }
+        await Store.Storage.ApplyAllConfiguredChangesToDatabaseAsync();
+        await TelemetrySchema.ApplyAsync(DataSource);
+    }
+
+    protected override async Task ResetDataAsync()
+    {
         await Store.Advanced.ResetAllData();
         await TelemetrySchema.TruncateAllAsync(DataSource);
-    }
-
-    public HttpClient ApiClient(string email)
-    {
-        var client = CreateClient();
-        client.DefaultRequestHeaders.Add("X-Dev-User", email);
-        return client;
-    }
-
-    public HttpClient DeviceKeyClient(string apiKey)
-    {
-        var client = CreateClient();
-        client.DefaultRequestHeaders.Add("Authorization", $"DeviceKey {apiKey}");
-        return client;
-    }
-
-    /// <summary>A client with no auth header — for asserting unauthenticated requests are rejected.</summary>
-    public HttpClient AnonymousClient() => CreateClient();
-
-    protected override void Dispose(bool disposing)
-    {
-        base.Dispose(disposing);
-        if (disposing) _postgres.DisposeAsync().AsTask().GetAwaiter().GetResult();
     }
 }
